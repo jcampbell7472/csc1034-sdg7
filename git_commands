@@ -1,0 +1,34 @@
+initial setup:
+
+git init
+>initialise repo inside current folder
+
+cd existing_repo
+git remote add origin https://gitlab.eeecs.qub.ac.uk/40484527/csc1034-group-project-sdg7.git
+git branch -M main
+git push -uf origin main
+
+
+git status
+
+>shows what files have changed, what's staged, what's untracked
+>use before every commit
+
+git add .
+
+>stages all changed files for commit
+>use before committing files
+>the . means EVERY changed file, change dot to file path for one file
+
+git commit -m "message"
+
+>commits staged files with a message
+>essentially creates a snapshot of the project
+
+git push
+
+>uploads commits to GitHub
+
+git pull
+
+>downloads changes from GitHub

@@ -1,0 +1,27 @@
+Run DB:
+docker compose up -d
+
+Check it's running:
+docker ps
+
+Stop running:
+docker compose down
+
+Reset DB:
+docker compose down -v
+
+enter DB:
+docker exec -it mysql bash
+
+login as root:
+mysql -u root -p
+
+
+view databases:
+SHOW DATABASES;
+
+To select your database:
+USE your_database_name;
+
+Then check tables:
+SHOW TABLES;
