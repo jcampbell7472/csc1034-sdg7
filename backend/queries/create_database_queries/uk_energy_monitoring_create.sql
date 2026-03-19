@@ -3,6 +3,8 @@
 DROP DATABASE IF EXISTS energy_monitoring;
 CREATE DATABASE IF NOT EXISTS energy_monitoring;
 
+USE energy_monitoring;
+
 -- check if tables exists, drop if they do. drop children first to prevent referential errors
 DROP TABLE IF EXISTS GenerationRecord;
 DROP TABLE IF EXISTS RegionalGenerationRecord;
@@ -73,10 +75,9 @@ CREATE TABLE AnnualEmissionsRecord(
     EMISSIONS_MtCO2e DECIMAL(10,3) NOT NULL CHECK (EMISSIONS_MtCO2e >= 0)
 );
 
--- Table 7: Energy Consumption table
--- This table tracks the energy consumption 
-CREATE TABLE EnergyConsumptionRecord(
-    ConsumptionID INT AUTO_INCREMENT PRIMARY KEY,
-    RegionID INT NOT NULL,
-    year Year NOT NULL
+-- Table 7: Energy Target table
+-- This table sets a percentage generation goal for both renewable and non-renewable energy geneation per year.
+-- e.g., set a goal for the UK's total generated energy to be 70% renewable in 2030, 75% in 2040, 80% in 2045, etc.
+CREATE TABLE RenewableEnergyTarget(
+
 );

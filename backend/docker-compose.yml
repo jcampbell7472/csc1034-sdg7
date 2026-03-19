@@ -1,20 +1,6 @@
 version: '3.9'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    restart: unless-stopped
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: devdb
-      MYSQL_USER: dev
-      MYSQL_PASSWORD: dev
-    volumes:
-      - mysql_data:/var/lib/mysql
-
   mariadb:
     image: mariadb:11
     container_name: mariadb
@@ -23,13 +9,6 @@ services:
       - "3306:3306"
     environment:
       MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: devdb
-      MARIADB_USER: dev
-      MARIADB_PASSWORD: dev
-    volumes:
-      - mariadb_data:/var/lib/mysql
+      MARIADB_DATABASE: energy_monitoring
 
-volumes:
-  mysql_data:
-  mariadb_data:
   
