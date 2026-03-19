@@ -72,7 +72,6 @@ CREATE TABLE AnnualEmissionsRecord(
     Year YEAR PRIMARY KEY,
     EMISSIONS_MtCO2e DECIMAL(10,3) NOT NULL CHECK (EMISSIONS_MtCO2e >= 0)
 );
--- );
 
 -- Table 7: Energy Consumption table
 -- This table tracks the energy consumption 
