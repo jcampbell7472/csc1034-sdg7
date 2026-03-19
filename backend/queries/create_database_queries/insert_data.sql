@@ -37,3 +37,5 @@ VALUES
 -- Add rows for RegionalGenerationRecord (RegionID, SourceID, Year, Generation_GWh)
 
 -- Add rows for AnnualEmissionsRecord (Year, EMISSIONS_MtCO2e)
+
+-- Add rows for EnergyEmissionsTarget

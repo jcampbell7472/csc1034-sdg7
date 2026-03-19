@@ -1,5 +1,5 @@
 
--- check if database already exists and drop it, then create new database
+-- check if database already exists and drop it, then create new database. This is simply to wipe the database
 DROP DATABASE IF EXISTS energy_monitoring;
 CREATE DATABASE IF NOT EXISTS energy_monitoring;
 
@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS EnergySource;
 DROP TABLE IF EXISTS EnergyCategory;
 DROP TABLE IF EXISTS Region;
 DROP TABLE IF EXISTS AnnualEmissionsRecord;
+DROP TABLE IF EXISTS EnergyEmissionsTarget;
 
 -- create tables
 
@@ -76,8 +77,9 @@ CREATE TABLE AnnualEmissionsRecord(
 );
 
 -- Table 7: Energy Target table
--- This table sets a percentage generation goal for both renewable and non-renewable energy geneation per year.
+-- This table sets a percentage generation goal for both renewable and non-renewable energy geneation per year, and a goal for carbon emmissions per year
 -- e.g., set a goal for the UK's total generated energy to be 70% renewable in 2030, 75% in 2040, 80% in 2045, etc.
-CREATE TABLE RenewableEnergyTarget(
+-- e.g., also have a goal for total emissions to be 80 MTCO2e in 2030, 70 in 2040, 50 in 2050, etc.
+CREATE TABLE EnergyEmissionsTarget(
 
 );
