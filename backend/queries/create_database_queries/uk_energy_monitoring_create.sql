@@ -78,8 +78,6 @@ CREATE TABLE AnnualEmissionsRecord(
 
 -- Table 7: Energy Target table
 -- This table sets a percentage generation goal for both renewable and non-renewable energy geneation per year, and a goal for carbon emmissions per year
--- e.g., set a goal for the UK's total generated energy to be 70% renewable in 2030, 75% in 2040, 80% in 2045, etc.
--- e.g., also have a goal for total emissions to be 80 MTCO2e in 2030, 70 in 2040, 50 in 2050, etc.
 CREATE TABLE EnergyEmissionsTarget(
     TargetYear YEAR PRIMARY KEY,
     RenewableTarget_Pct DECIMAL(5,2) NOT NULL CHECK (RenewableTarget_Pct BETWEEN 0 AND 100),
