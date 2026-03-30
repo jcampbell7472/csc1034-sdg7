@@ -25,7 +25,6 @@ CREATE TABLE EnergySource(
     SourceName VARCHAR(100) NOT NULL UNIQUE,
     CategoryID INT NOT NULL,
     FOREIGN KEY (CategoryID) REFERENCES EnergyCategory(CategoryID)
-    ON DELETE CASCADE
 );
 
 -- table 3: region
