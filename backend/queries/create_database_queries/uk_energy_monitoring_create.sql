@@ -47,7 +47,18 @@ CREATE TABLE GenerationRecord(
 -- year is indexed as reports will access it frequently
 CREATE INDEX idx_generation_year ON GenerationRecord(Year); 
 
--- table 5: regional generation record
+-- table 5: region energy source
+-- this is a junction table needed to solve the M:M relationship between Region and EnergySource
+-- this table is referenced by RegionalGenerationRecord
+CREATE TABLE RegionEnergySource(
+    RegionID INT NOT NULL,
+    SourceID INT NOT NULL,
+    PRIMARY KEY (RegionID, SourceID),
+    FOREIGN KEY (RegionID) REFERENCES Region(RegionID),
+    FOREIGN KEY (SourceID) REFERENCES EnergySource(SourceID)
+);
+
+-- table 6: regional generation record
 -- this table is the same as GenerationRecord, but for a specific region in the UK
 CREATE TABLE RegionalGenerationRecord(
     RegionalGenerationID INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,13 +67,14 @@ CREATE TABLE RegionalGenerationRecord(
     Year YEAR NOT NULL,
     Generation_GWh DECIMAL(12,2) NOT NULL CHECK (Generation_GWh>=0),
     UNIQUE (RegionID, SourceID, Year),
-    FOREIGN KEY (RegionID) REFERENCES Region(RegionID),
-    FOREIGN KEY (SourceID) REFERENCES EnergySource(SourceID)
+    FOREIGN KEY (RegionID, SourceID) REFERENCES RegionEnergySource(RegionID, SourceID)
 );
+-- year index as reports will access often
 CREATE INDEX idx_regional_year ON RegionalGenerationRecord(Year);
+-- composite index for region and year as reports will filter by them together
 CREATE INDEX idx_regional_region_year ON RegionalGenerationRecord(RegionID, Year);
 
--- table 6: annual emissions record
+-- table 7: annual emissions record
 -- this table stores the annual co2 emissions for the entire UK
 -- it uses the unit MtCO2e (Million Metric Tons of Carbon Dioxide Equivalent)
 CREATE TABLE AnnualEmissionsRecord(
@@ -70,10 +82,10 @@ CREATE TABLE AnnualEmissionsRecord(
     EMISSIONS_MtCO2e DECIMAL(10,3) NOT NULL CHECK (EMISSIONS_MtCO2e >= 0)
 );
 
--- Table 7: Energy Target table
+-- Table 8: Energy Target table
 -- This table sets a percentage generation goal for both renewable and non-renewable energy geneation per year, and a goal for carbon emmissions per year
 CREATE TABLE EnergyEmissionsTarget(
     TargetYear YEAR PRIMARY KEY,
     RenewableTarget_Pct DECIMAL(5,2) NOT NULL CHECK (RenewableTarget_Pct BETWEEN 0 AND 100),
     EmissionsTarget_MtCO2e DECIMAL(10, 3) NOT NULL CHECK (EmissionsTarget_MtCO2e >= 0)
-);  
+);
