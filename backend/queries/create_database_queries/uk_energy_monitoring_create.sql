@@ -5,15 +5,6 @@ CREATE DATABASE IF NOT EXISTS energy_monitoring;
 
 USE energy_monitoring;
 
--- check if tables exists, drop if they do. drop children first to prevent referential errors
-DROP TABLE IF EXISTS GenerationRecord;
-DROP TABLE IF EXISTS RegionalGenerationRecord;
-DROP TABLE IF EXISTS EnergySource;
-DROP TABLE IF EXISTS EnergyCategory;
-DROP TABLE IF EXISTS Region;
-DROP TABLE IF EXISTS AnnualEmissionsRecord;
-DROP TABLE IF EXISTS EnergyEmissionsTarget;
-
 -- create tables
 
 -- table 1: energy category
