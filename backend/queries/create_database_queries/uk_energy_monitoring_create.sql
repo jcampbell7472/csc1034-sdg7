@@ -43,8 +43,9 @@ CREATE TABLE GenerationRecord(
     Generation_GWh DECIMAL(12,2) NOT NULL CHECK (Generation_GWh>=0),
     UNIQUE (SourceID, Year),
     FOREIGN KEY (SourceID) REFERENCES EnergySource(SourceID)
-    CREATE INDEX idx_generation_year ON GenerationRecord(Year); --year is indexed as reports will access it frequently
 );
+-- year is indexed as reports will access it frequently
+CREATE INDEX idx_generation_year ON GenerationRecord(Year); 
 
 -- table 5: regional generation record
 -- this table is the same as GenerationRecord, but for a specific region in the UK
@@ -57,9 +58,9 @@ CREATE TABLE RegionalGenerationRecord(
     UNIQUE (RegionID, SourceID, Year),
     FOREIGN KEY (RegionID) REFERENCES Region(RegionID),
     FOREIGN KEY (SourceID) REFERENCES EnergySource(SourceID)
-    CREATE INDEX idx_regional_year ON RegionalGenerationRecord(Year);
-    CREATE INDEX idx_regional_region_year ON RegionalGenerationRecord(RegionID, Year);
 );
+CREATE INDEX idx_regional_year ON RegionalGenerationRecord(Year);
+CREATE INDEX idx_regional_region_year ON RegionalGenerationRecord(RegionID, Year);
 
 -- table 6: annual emissions record
 -- this table stores the annual co2 emissions for the entire UK
