@@ -88,4 +88,4 @@ CREATE TABLE EnergyEmissionsTarget(
     TargetYear YEAR PRIMARY KEY,
     RenewableTarget_Pct DECIMAL(5,2) NOT NULL CHECK (RenewableTarget_Pct BETWEEN 0 AND 100),
     EmissionsTarget_MtCO2e DECIMAL(10, 3) NOT NULL CHECK (EmissionsTarget_MtCO2e >= 0)
-);
+);  
