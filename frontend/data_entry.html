@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Data Entry - UK Energy Monitor</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- NAV (same as index.html) -->
+    <nav>
+        <a class="nav-title" href="index.html">UK Energy Monitor</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="reports.html">Reports</a></li>
+            <li><a href="data_entry.html" class="active">Data Entry</a></li>
+            <li><a href="about.html">About</a></li>
+        </ul>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <section class="hero" style="margin-top:40px;">
+        <div class="hero-text">
+            <h1>Database Data Entry</h1>
+            <p>
+                View and manage data stored in the UK Energy Monitor database.
+                Select a table below to display its current records.
+            </p>
+        </div>
+    </section>
+
+    <!-- CONTENT -->
+    <div class="bottom">
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>View Table Data</h3>
+
+                <label>Select Table</label>
+                <select id="tableSelect">
+                    <option value="">--Choose Table--</option>
+                    <option value="GenerationRecord">GenerationRecord</option>
+                    <option value="RegionalGenerationRecord">RegionalGenerationRecord</option>
+                    <option value="AnnualEmissionsRecord">AnnualEmissionsRecord</option>
+                    <option value="EnergyEmissionsTarget">EnergyEmissionsTarget</option>
+                </select>
+
+                <button onclick="loadTable()">Load Table</button>
+            </div>
+
+            <div id="tableContainer"></div>
+
+        </div>
+
+        <div class="cards">
+
+            <!-- DELETE CARD -->
+            <div class="card">
+                <h3>Delete Record by ID</h3>
+
+                <label>Select Table</label>
+                <select id="deleteTable">
+                    <option value="">--Choose Table--</option>
+                    <option value="GenerationRecord">GenerationRecord</option>
+                    <option value="RegionalGenerationRecord">RegionalGenerationRecord</option>
+                    <option value="AnnualEmissionsRecord">AnnualEmissionsRecord</option>
+                    <option value="EnergyEmissionsTarget">EnergyEmissionsTarget</option>
+                </select>
+
+                <label>Enter ID</label>
+                <input type="number" id="deleteId" placeholder="e.g. 5">
+
+                <button onclick="deleteRecord()">Delete</button>
+                <p id="deleteResult"></p>
+            </div>
+
+            <!-- UPDATE CARD -->
+            <div class="card">
+                <h3>Update Record</h3>
+
+                <label>Select Table</label>
+                <select id="updateTable">
+                    <option value="">--Choose Table--</option>
+                    <option value="GenerationRecord">GenerationRecord</option>
+                    <option value="RegionalGenerationRecord">RegionalGenerationRecord</option>
+                    <option value="AnnualEmissionsRecord">AnnualEmissionsRecord</option>
+                    <option value="EnergyEmissionsTarget">EnergyEmissionsTarget</option>
+                </select>
+
+                <label>Enter ID</label>
+                <input type="number" id="updateId" placeholder="e.g. 3">
+
+                <label>Column to Update</label>
+                <input type="text" id="updateColumn" placeholder="e.g. Generation_GWh">
+
+                <label>New Value</label>
+                <input type="text" id="updateValue" placeholder="e.g. 90000">
+
+                <button onclick="updateRecord()">Update</button>
+                <p id="updateResult"></p>
+            </div>
+
+            <!-- INSERT CARD -->
+            <div class="card entry-section">
+                <h3>Insert into GenerationRecord</h3>
+
+                <label>SourceID</label>
+                <input id="g_source">
+
+                <label>Year</label>
+                <input id="g_year">
+
+                <label>Generation_GWh</label>
+                <input id="g_gwh">
+
+                <button onclick="insertGeneration()">Insert</button>
+                <pre id="out_gen"></pre>
+            </div>
+
+            <div class="card entry-section">
+                <h3>Insert into RegionalGenerationRecord</h3>
+
+                <label>RegionID</label>
+                <input id="r_region">
+
+                <label>SourceID</label>
+                <input id="r_source">
+
+                <label>Year</label>
+                <input id="r_year">
+
+                <label>Generation_GWh</label>
+                <input id="r_gwh">
+
+                <button onclick="insertRegional()">Insert</button>
+                <pre id="out_reg"></pre>
+            </div>
+
+            <div class="card entry-section">
+                <h3>Insert into AnnualEmissionsRecord</h3>
+
+                <label>Year</label>
+                <input id="e_year">
+
+                <label>EMISSIONS_MtCO2e</label>
+                <input id="e_em">
+
+                <button onclick="insertEmissions()">Insert</button>
+                <pre id="out_em"></pre>
+            </div>
+
+            <div class="card entry-section">
+                <h3>Insert into EnergyEmissionsTarget</h3>
+
+                <label>TargetYear</label>
+                <input id="t_year">
+
+                <label>RenewableTarget_Pct</label>
+                <input id="t_pct">
+
+                <label>EmissionsTarget_MtCO2e</label>
+                <input id="t_em">
+
+                <button onclick="insertTarget()">Insert</button>
+                <pre id="out_tar"></pre>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ & UK Government Statistics
+    </footer>
+
+    <script src="js/data_entry.js"></script>
+</body>
+
+</body>
+
+</html>
