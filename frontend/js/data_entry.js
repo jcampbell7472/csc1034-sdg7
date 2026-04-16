@@ -1,213 +1,149 @@
-const API_URL = "http://localhost:8000/dbConnector.php";
+const PHP_URL = "http://localhost:8000/dbConnector.php";
 
+//function to send a query to the database, display result text in outputId if provided
+async function sendQuery(query, outputId) {
+    //send POST request to dbConnector.php
+    const response = await fetch(PHP_URL, {
+        method: "POST", //POST request
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "query=" + encodeURIComponent(query) //body is sql query, uses encodeURIComponent to ignore special characters
+    });
+    const result = await response.json(); //parse json to object
+    //if outputId is passed in, gives a success or error message depending on if the request was successful
+    if (outputId) {
+        if (result.success) {
+            document.getElementById(outputId).innerText = "Success.";
+        }
+        else {
+            document.getElementById(outputId).innerText = "Error: " + result.error;
+        }
+    }
+    return result; //return result so that it can be used
+}
+
+// Returns the primary key column name for a given table, returns null if not found
+function getPrimaryKey(table) {
+    if (table === "GenerationRecord") return "GenerationID";
+    if (table === "RegionalGenerationRecord") return "RegionalGenerationID";
+    if (table === "AnnualEmissionsRecord") return "Year";
+    if (table === "EnergyEmissionsTarget") return "TargetYear";
+    return null;
+}
+
+// Get an element's value by ID, put into a function for convenience
+function getValue(id) {
+    return document.getElementById(id).value;
+}
+
+//function to load a table from the database using the page's dropdown menu
+//async function to allow use of await
 async function loadTable() {
-    const tableName = document.getElementById("tableSelect").value;
+    const table = getValue("tableSelect"); //get the selected table from the dropdown
 
-    if (!tableName) {
-        alert("Please select a table");
+    //validate a table has been selected
+    if (!table) {
+        alert("Please select a table.");
         return;
     }
 
-    const sql = `SELECT * FROM ${tableName};`;
+    //send query using sendQuery function, uses await to block code until response is received
+    const result = await sendQuery(`SELECT * FROM ${table}`);
 
-    const response = await fetch(API_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "query=" + encodeURIComponent(sql)
-    });
-
-    const result = await response.json();
-
+    //show error if query fails
     if (!result.success) {
         alert("Error: " + result.error);
         return;
     }
 
+    //call displayTable
     displayTable(result.data);
 }
 
+//function to display a table, data parameter is an array of objects that represent rows in a table from the database
 function displayTable(data) {
+    //get tableContainer and assign it to a variable
     const container = document.getElementById("tableContainer");
-    container.innerHTML = "";
 
-    if (data.length === 0) {
+    //check if the table contains any data, display a message if it doesn't
+    if (!data || data.length === 0) {
         container.innerHTML = "<p>No data found.</p>";
         return;
     }
 
-    const table = document.createElement("table");
-    table.border = "1";
-    table.style.borderCollapse = "collapse";
-    table.style.marginTop = "20px";
-
-    // Create header row
+    //get table headers
     const headers = Object.keys(data[0]);
-    const headerRow = document.createElement("tr");
 
-    headers.forEach(header => {
-        const th = document.createElement("th");
-        th.innerText = header;
-        th.style.padding = "8px";
-        headerRow.appendChild(th);
-    });
+    //start building table
+    let html = "<table>";
 
-    table.appendChild(headerRow);
+    // header row
+    html += "<tr>";
+    headers.forEach(h => html += `<th>${h}</th>`);
+    html += "</tr>";
 
-    // Create data rows
+    // data rows
     data.forEach(row => {
-        const tr = document.createElement("tr");
-
-        headers.forEach(header => {
-            const td = document.createElement("td");
-            td.innerText = row[header];
-            td.style.padding = "8px";
-            tr.appendChild(td);
-        });
-
-        table.appendChild(tr);
+        html += "<tr>";
+        headers.forEach(h => html += `<td>${row[h]}</td>`);
+        html += "</tr>";
     });
 
-    container.appendChild(table);
+    html += "</table>";
 
-    function deleteRecord() {
-        const table = document.getElementById("deleteTable").value;
-        const id = document.getElementById("deleteId").value;
-        const resultBox = document.getElementById("deleteResult");
-
-        if (!table || !id) {
-            resultBox.innerText = "Please select a table and enter an ID.";
-            return;
-        }
-
-        // Determine correct ID column for each table
-        let idColumn = "";
-
-        if (table === "GenerationRecord") idColumn = "GenerationID";
-        if (table === "RegionalGenerationRecord") idColumn = "RegionalGenerationID";
-        if (table === "AnnualEmissionsRecord") idColumn = "Year";
-        if (table === "EnergyEmissionsTarget") idColumn = "TargetYear";
-
-        const query = `DELETE FROM ${table} WHERE ${idColumn} = ${id};`;
-
-        fetch("dbConnector.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "query=" + encodeURIComponent(query)
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    resultBox.innerText = "Record deleted successfully.";
-                } else {
-                    resultBox.innerText = data.error;
-                }
-            })
-            .catch(err => resultBox.innerText = err);
-    }
+    //set constructed table to tableContainer
+    container.innerHTML = html;
 }
 
-function deleteRecord() {
-    const table = document.getElementById("deleteTable").value;
-    const id = document.getElementById("deleteId").value;
-    const resultBox = document.getElementById("deleteResult");
-
+//async function to delete a record from a table
+async function deleteRecord() {
+    //get required values
+    const table = getValue("deleteTable");
+    const id = getValue("deleteId");
+    const pk = getPrimaryKey(table);
+    //check that all values have been provided
     if (!table || !id) {
-        resultBox.innerText = "Please select a table and enter an ID.";
-        return;
+        document.getElementById("deleteResult").innerText = "Please fill in all fields."; return;
     }
-
-    // Determine correct ID column for each table
-    let idColumn = "";
-
-    if (table === "GenerationRecord") idColumn = "GenerationID";
-    if (table === "RegionalGenerationRecord") idColumn = "RegionalGenerationID";
-    if (table === "AnnualEmissionsRecord") idColumn = "Year";
-    if (table === "EnergyEmissionsTarget") idColumn = "TargetYear";
-
-    const query = `DELETE FROM ${table} WHERE ${idColumn} = ${id};`;
-
-    fetch("dbConnector.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "query=" + encodeURIComponent(query)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            resultBox.innerText = "Record deleted successfully.";
-        } else {
-            resultBox.innerText = data.error;
-        }
-    })
-    .catch(err => resultBox.innerText = err);
+    //send query to database
+    await sendQuery(`DELETE FROM ${table} WHERE ${pk} = ${id}`, "deleteResult");
 }
 
-function updateRecord() {
-    const table = document.getElementById("updateTable").value;
-    const id = document.getElementById("updateId").value;
-    const column = document.getElementById("updateColumn").value;
-    const value = document.getElementById("updateValue").value;
-    const resultBox = document.getElementById("updateResult");
-
+//async function to update a record in a table
+async function updateRecord() {
+    //get required values
+    const table = getValue("updateTable");
+    const id = getValue("updateId");
+    const column = getValue("updateColumn");
+    const value = getValue("updateValue");
+    const pk = getPrimaryKey(table);
+    //check that all values have been provided
     if (!table || !id || !column || !value) {
-        resultBox.innerText = "All fields are required.";
-        return;
+        document.getElementById("updateResult").innerText = "All fields are required."; return;
     }
-
-    let idColumn = "";
-
-    if (table === "GenerationRecord") idColumn = "GenerationID";
-    if (table === "RegionalGenerationRecord") idColumn = "RegionalGenerationID";
-    if (table === "AnnualEmissionsRecord") idColumn = "Year";
-    if (table === "EnergyEmissionsTarget") idColumn = "TargetYear";
-
-    const query = `UPDATE ${table} SET ${column} = ${value} WHERE ${idColumn} = ${id};`;
-
-    fetch("dbConnector.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "query=" + encodeURIComponent(query)
-    })
-    .then(res => res.json())
-    .then(data => {
-        resultBox.innerText = data.success ? "Record updated." : data.error;
-    })
-    .catch(err => resultBox.innerText = err);
+    //send query to database
+    await sendQuery(`UPDATE ${table} SET ${column} = '${value}' WHERE ${pk} = ${id}`, "updateResult");
 }
 
-function postQuery(query, outputId) {
-    fetch("dbConnector.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: "query=" + encodeURIComponent(query)
-    })
-    .then(res => res.json())
-    .then(data => {
-        document.getElementById(outputId).textContent =
-            JSON.stringify(data, null, 2);
-    });
+//async function to insert a record into GenerationRecord
+async function insertGeneration() {
+    await sendQuery(`INSERT INTO GenerationRecord (SourceID, Year, Generation_GWh)
+        VALUES (${getValue("g_source")}, ${getValue("g_year")}, ${getValue("g_gwh")})`, "out_gen");
 }
 
-function insertGeneration() {
-    const q = `INSERT INTO GenerationRecord (SourceID, Year, Generation_GWh)
-               VALUES (${g_source.value}, ${g_year.value}, ${g_gwh.value})`;
-    postQuery(q, "out_gen");
+//async function to insert a record into RegionalGenerationRecord
+async function insertRegional() {
+    await sendQuery(`INSERT INTO RegionalGenerationRecord (RegionID, SourceID, Year, Generation_GWh)
+        VALUES (${getValue("r_region")}, ${getValue("r_source")}, ${getValue("r_year")}, ${getValue("r_gwh")})`, "out_reg");
 }
 
-function insertRegional() {
-    const q = `INSERT INTO RegionalGenerationRecord (RegionID, SourceID, Year, Generation_GWh)
-               VALUES (${r_region.value}, ${r_source.value}, ${r_year.value}, ${r_gwh.value})`;
-    postQuery(q, "out_reg");
+//async function to insert a record into AnnualEmissionsRecord
+async function insertEmissions() {
+    await sendQuery(`INSERT INTO AnnualEmissionsRecord (Year, EMISSIONS_MtCO2e)
+        VALUES (${getValue("e_year")}, ${getValue("e_em")})`, "out_em");
 }
 
-function insertEmissions() {
-    const q = `INSERT INTO AnnualEmissionsRecord (Year, EMISSIONS_MtCO2e)
-               VALUES (${e_year.value}, ${e_em.value})`;
-    postQuery(q, "out_em");
-}
-
-function insertTarget() {
-    const q = `INSERT INTO EnergyEmissionsTarget (TargetYear, RenewableTarget_Pct, EmissionsTarget_MtCO2e)
-               VALUES (${t_year.value}, ${t_pct.value}, ${t_em.value})`;
-    postQuery(q, "out_tar");
+//async function to insert a record into EnergyEmissionsTarget
+async function insertTarget() {
+    await sendQuery(`INSERT INTO EnergyEmissionsTarget (TargetYear, RenewableTarget_Pct, EmissionsTarget_MtCO2e)
+        VALUES (${getValue("t_year")}, ${getValue("t_pct")}, ${getValue("t_em")})`, "out_tar");
 }
