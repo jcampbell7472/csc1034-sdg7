@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../css/style.css">
+        <title>Reports -Lewis Martin</title>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    </head>
+    <body>
+        <nav>
+            <a href="../index.html">UK Energy Monitor</a>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../data_entry.html">Data Entry</a></li>
+                <li><a href="../reports.html">Reports</a></li>
+                <li><a href="../about.html">About</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-header">
+            <h1>Energy Reports</h1>
+        </div>
+
+        <!-- Report 1 -->
+        <h2>Renewable vs Non-Renewable Generation</h2>
+        <div id="output1"></div>
+        <table id="report1Table">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Category</th>
+                    <th>Total Generation (GWh)</th>
+                    <th>Percentage (%)</th>
+                </tr>
+            </thead>
+            <tbody id="report1Body"></tbody>
+        </table>
+        <canvas id="chart1"></canvas>
+
+        <!-- Report 2 -->
+        <h2>Renewable Generation by Region and Source</h2>
+        <label for="yearFilter">Filter by Year:</label>
+        <select id="yearFilter">
+            <option value="2023">2023</option>
+            <option value="2024">2024</option>
+        </select>
+        <button onclick="loadReport2()">Load</button>
+        <div id="output2"></div>
+        <table id="report2Table">
+            <thead>
+                <tr>
+                    <th>Region</th>
+                    <th>Source</th>
+                    <th>Total Generation (GWh)</th>
+                </tr>
+            </thead>
+            <tbody id="report2Body"></tbody>
+        </table>
+        <canvas id="chart2"></canvas>
+
+        <!-- Report 3 -->
+        <h2>Actual Emissions vs Targets</h2>
+        <div id="output3"></div>
+        <table id="report3Table">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Actual Emissions (MtCO2e)</th>
+                    <th>Target Emissions (MtCO2e)</th>
+                    <th>Renewable Target (%)</th>
+                    <th>Difference</th>
+                </tr>
+            </thead>
+            <tbody id="report3Body"></tbody>
+        </table>
+
+        <footer>
+            UK Energy Monitor &mdash; CSC1034 Group Project &nbsp;|&nbsp; Data sourced from DESNZ &amp; UK Government Statistics
+        </footer>
+
+        <script src="reports_js/lewis_js.js"></script>
+    </body>
+</html>

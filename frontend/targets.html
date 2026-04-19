@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css">
+        <title>Energy Targets</title>
+    </head>
+    <body>
+        <nav>
+            <a href="index.html">UK Energy Monitor</a>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="data_entry.html">Data Entry</a></li>
+                <li><a href="reports.html">Reports</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+
+        <div class="page-header">
+            <h1>Energy Emissions Targets</h1>
+        </div>
+
+        <div id="output"></div>
+
+        <h2 id="formTitle">Add Target</h2>
+
+        <div id="targetForm">
+            <label for="targetYear">Target Year:</label><br>
+            <input type="number" id="targetYear" placeholder="e.g. 2030"><br><br>
+
+            <label for="renewablePct">Renewable Target (%):</label><br>
+            <input type="number" id="renewablePct" placeholder="e.g. 95"><br><br>
+
+            <label for="emissionsTarget">Emissions Target (MtCO2e):</label><br>
+            <input type="number" id="emissionsTarget" placeholder="e.g. 250"><br><br>
+
+            <button id="submitBtn" onclick="submitForm()">Add Target</button>
+            <button onclick="resetForm()">Cancel</button>
+        </div>
+
+        <h2>Targets</h2>
+        <table id="targetsTable">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Renewable Target (%)</th>
+                    <th>Emissions Target (MtCO2e)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="targetsBody"></tbody>
+        </table>
+
+        <footer>
+            UK Energy Monitor &mdash; CSC1034 Group Project &nbsp;|&nbsp; Data sourced from DESNZ &amp; UK Government Statistics
+        </footer>
+        <script src="js/targets.js"></script>
+    </body>
+</html>

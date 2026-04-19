@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="css/style.css">
+        <title>Generation Record</title>
+    </head>
+    <body>
+        <nav>
+    <a href="../frontend/index.html">UK Energy Monitor</a>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="data_entry.html">Data Entry</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><a href="about.html">About</a></li>
+    </ul>
+</nav>
+
+<div class="page-header">
+    <h1>Generation Records</h1>
+</div>
+
+        <div id = "output"></div>
+        
+        <h2 id="formTitle">Add Record</h2>
+
+        <div id ="recordForm">
+            <label for="sourceID">Source:</label><br>
+            <select id="sourceID"></select><br><br>
+
+            <label for="year">Year:</label><br>
+            <input type="number" id="year" placeholder="e.g. 2024"><br><br>
+
+            <label for="generation">Generation (GWh):</label><br>
+            <input type="number" id="generation" placeholder="e.g. 13000"><br><br>
+
+            <button id="submitBtn" onclick="submitForm()">Add Record</button>
+            <button onclick="resetForm()">Cancel</button>
+        </div>
+
+        <h2>Records</h2>
+        <table id="recordsTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Source</th>
+                    <th>Year</th>
+                    <th>Generation (GWh)</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="recordsBody"></tbody>
+        </table>
+        <script src="js/generation.js"></script>
+        <footer>
+    UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ & UK Government Statistics
+</footer>
+    </body>
+</html>
