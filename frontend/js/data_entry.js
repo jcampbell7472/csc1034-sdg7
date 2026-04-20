@@ -1,3 +1,7 @@
+/*
+author: Jake Campbell
+*/
+
 const PHP_URL = "http://localhost:8000/dbConnector.php";
 
 //function to send a query to the database, display result text in outputId if provided
