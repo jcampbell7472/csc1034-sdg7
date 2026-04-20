@@ -220,3 +220,36 @@ tr:nth-child(even) td { background: #f9f9f9; }
 .report p { margin-bottom: 24px; }
 
 canvas { max-width: 100%; }
+
+.stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin: 24px 0 48px;
+}
+
+.stat-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.stat-value {
+    font-family: Georgia, serif;
+    font-size: 1.75rem;
+    color: var(--green);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+}
+
+.chart-pie {
+    max-width: 350px;
+    margin: 0 auto;
+    display: block;
+}
