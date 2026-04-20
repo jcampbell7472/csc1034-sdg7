@@ -209,3 +209,14 @@ tr:nth-child(even) td { background: #f9f9f9; }
 
 .badge-yes { background: #d4edda; color: #2d6a4f; }
 .badge-no  { background: #f8d7da; color: #721c24; }
+
+.report {
+    margin-bottom: 56px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid var(--border);
+}
+
+.report h2 { margin-bottom: 8px; }
+.report p { margin-bottom: 24px; }
+
+canvas { max-width: 100%; }

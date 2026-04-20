@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports — UK Energy Monitor</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="reports_js/jake_js.js" defer></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a class="nav-title" href="index.html">UK Energy Monitor</a>
+    <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../dashboard.html">Dashboard</a></li>
+        <li><a href="../reports.html" class="active">Reports</a></li>
+        <li><a href="../data_entry.html">Data Entry</a></li>
+        <li><a href="../about.html">About</a></li>
+    </ul>
+</nav>
+
+<div class="page">
+
+    <h1>Reports</h1>
+    <p>SQL-driven analytical reports on UK energy generation and emissions.</p>
+
+    <!-- REPORT 1 -->
+    <section class="report">
+        <h2>Renewable Progress Toward 2030 Target</h2>
+        <p>
+            Shows the UK's renewable generation as a percentage of total generation for each recorded year,
+            plotted against the government's 2030 clean power target of 95%. Useful for assessing whether
+            the current trend is on track to meet the target.
+        </p>
+        <canvas id="chart1"></canvas>
+    </section>
+
+    <!-- REPORT 2 -->
+    <section class="report">
+        <h2>Regional Contribution to National Generation by Source</h2>
+        <p>
+            For each energy source, shows how much each UK region contributes to the national total
+            as a percentage. Identifies which regions are driving generation for each source,
+            and where regional investment may have the most impact.
+        </p>
+        <canvas id="chart2"></canvas>
+    </section>
+
+    <!-- REPORT 3 -->
+    <section class="report">
+        <h2>Year-on-Year Emissions Reduction</h2>
+        <p>
+            Tracks how much UK carbon emissions fell each year compared to the previous year,
+            measured in MtCO₂e. Positive values indicate a reduction. Shows whether the rate
+            of reduction is accelerating or slowing over time.
+        </p>
+        <canvas id="chart3"></canvas>
+    </section>
+
+</div>
+
+<footer>
+    UK Energy Monitor &mdash; CSC1034 Group Project &nbsp;|&nbsp; Data sourced from DESNZ &amp; UK Government Statistics
+</footer>
+
+
+</body>
+</html>
