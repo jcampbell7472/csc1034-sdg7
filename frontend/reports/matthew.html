@@ -5,102 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matthew's Reports — UK Energy Monitor</title>
     <link rel="stylesheet" href="../css/style.css">
-    <!-- Chart.js is a libbary imported from the CDN which is used to draw charts -->
+    <!-- Chart.js is a library imported from a CDN used to draw charts on HTML canvas elements -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-
-/*not done, add own comments
-
-        /* These styles add extra formatting to this page like section boarders, row layout and table styling */
-        .report-section {
-            border: 1px solid var(--border);
-            padding: 20px;
-            margin-bottom: 24px;
-        }
-
-        .report-section h2 {
-            font-family: Georgia, serif;
-            color: var(--green);
-            margin-bottom: 4px;
-        }
-
-        .report-meta {
-            font-size: 0.82rem;
-            color: #888;
-            margin-bottom: 12px;
-        }
-
-        .param-row {
-            display: flex;
-            gap: 12px;
-            align-items: flex-end;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
-        }
-
-        .param-row label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 4px;
-        }
-
-        .param-row input,
-        .param-row select {
-            margin: 0;
-            width: auto;
-            min-width: 140px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.88rem;
-            margin-top: 8px;
-        }
-
-        th {
-            background: var(--green);
-            color: #fff;
-            padding: 8px 10px;
-            text-align: left;
-        }
-
-        td {
-            padding: 7px 10px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        tr:last-child td { border-bottom: none; }
-
-        tr:nth-child(even) td { background: #f9f9f9; }
-
-        .result-msg {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-top: 6px;
-            min-height: 18px;
-        }
-
-        .chart-wrap {
-            max-width: 600px;
-            margin-top: 16px;
-        }
-
-        .renewable-badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 2px;
-            font-size: 0.78rem;
-            font-weight: bold;
-        }
-
-        .badge-yes { background: #d4edda; color: #2d6a4f; }
-        .badge-no  { background: #f8d7da; color: #721c24; }
-    </style>
 </head>
 <body>
-
+ 
 <!-- NAV -->
 <nav>
     <a class="nav-title" href="../index.html">UK Energy Monitor</a>
@@ -112,13 +21,13 @@
         <li><a href="../about.html">About</a></li>
     </ul>
 </nav>
-
+ 
 <!-- PAGE HEADER -->
 <header class="page-header">
     <h1>Matthew's Reports</h1>
     <p>Three SQL-driven reports analysing UK electricity generation and energy source trends.</p>
 </header>
-
+ 
 <!-- REPORT 1 -->
 <div class="report-section">
     <h2>Report 1 — Top Energy Sources by National Generation</h2>
@@ -126,8 +35,8 @@
         Business question: Which energy sources generated the most electricity in a given year,
         and are they renewable or non-renewable?
     </p>
-
-    <!-- COMMENT: explain what this param-row is for and how the year filter works -->
+ 
+    <!-- This row contains the year dropdown and run button, making the report parameterised -->
     <div class="param-row">
         <div>
             <label for="r1_year">Year</label>
@@ -139,16 +48,16 @@
         </div>
         <button onclick="runReport1()">Run Report</button>
     </div>
-
+ 
     <p class="result-msg" id="r1_msg"></p>
     <div id="r1_table"></div>
-
-    <!-- COMMENT: explain what the canvas element is and how Chart.js uses it -->
+ 
+    <!-- Chart.js requires a canvas element to draw on, the id is used in JS to target it -->
     <div class="chart-wrap">
         <canvas id="r1_chart"></canvas>
     </div>
 </div>
-
+ 
 <!-- REPORT 2 -->
 <div class="report-section">
     <h2>Report 2 — Regional Generation Coverage Gaps</h2>
@@ -156,8 +65,8 @@
         Business question: Which regions have no recorded generation data for a given
         energy source in a selected year?
     </p>
-
-    <!-- COMMENT: explain the two filters here and why both are needed for this query -->
+ 
+    <!-- The year dropdown filters the LEFT JOIN condition so only gaps in that year are returned -->
     <div class="param-row">
         <div>
             <label for="r2_year">Year</label>
@@ -168,11 +77,11 @@
         </div>
         <button onclick="runReport2()">Run Report</button>
     </div>
-
+ 
     <p class="result-msg" id="r2_msg"></p>
     <div id="r2_table"></div>
 </div>
-
+ 
 <!-- REPORT 3 -->
 <div class="report-section">
     <h2>Report 3 — Year-on-Year Generation Change by Source</h2>
@@ -180,8 +89,8 @@
         Business question: How has electricity generation from each energy source changed
         between two selected years?
     </p>
-
-    <!-- COMMENT: explain what these two year inputs do and how they feed into the SQL query -->
+ 
+    <!-- The two dropdowns provide fromYear and toYear values that are inserted into the SQL query -->
     <div class="param-row">
         <div>
             <label for="r3_from">From Year</label>
@@ -199,231 +108,18 @@
         </div>
         <button onclick="runReport3()">Run Report</button>
     </div>
-
+ 
     <p class="result-msg" id="r3_msg"></p>
     <div id="r3_table"></div>
 </div>
-
+ 
 <!-- FOOTER -->
 <footer>
     UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ &amp; UK Government Statistics
 </footer>
-
-<script>
-    // COMMENT: explain what PHP_URL is and why it points to dbConnector.php
-    const PHP_URL = "../dbConnector.php";
-
-    // COMMENT: explain what this function does — sending a query and getting back JSON
-    async function sendQuery(query) {
-        const response = await fetch(PHP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "query=" + encodeURIComponent(query)
-        });
-        return await response.json();
-    }
-
-    // COMMENT: explain what this function does — building an HTML table from an array of row objects
-    function buildTable(data, containerId) {
-        const container = document.getElementById(containerId);
-
-        if (!data || data.length === 0) {
-            container.innerHTML = "<p>No results returned.</p>";
-            return;
-        }
-
-        const headers = Object.keys(data[0]);
-        let html = "<table><tr>";
-        headers.forEach(h => html += `<th>${h}</th>`);
-        html += "</tr>";
-
-        data.forEach(row => {
-            html += "<tr>";
-            headers.forEach(h => {
-                // COMMENT: explain what this IsRenewable check does and why badges improve readability
-                if (h === "IsRenewable") {
-                    const label = row[h] == 1 ? "Yes" : "No";
-                    const cls   = row[h] == 1 ? "badge-yes" : "badge-no";
-                    html += `<td><span class="renewable-badge ${cls}">${label}</span></td>`;
-                } else {
-                    html += `<td>${row[h] !== null ? row[h] : "—"}</td>`;
-                }
-            });
-            html += "</tr>";
-        });
-
-        html += "</table>";
-        container.innerHTML = html;
-    }
-
-    // COMMENT: explain what this variable does — keeps track of the chart so it can be destroyed before redrawing
-    let r1ChartInstance = null;
-
-    // COMMENT: explain what this function does overall — runs report 1, shows table and chart
-    async function runReport1() {
-        const year = document.getElementById("r1_year").value;
-        const msg  = document.getElementById("r1_msg");
-        msg.textContent = "Loading...";
-
-        // COMMENT: explain why the year variable is inserted into the query here (parameterised report)
-        const query = `
-            SELECT
-                es.SourceName,
-                ec.CategoryName,
-                ec.IsRenewable,
-                SUM(gr.Generation_GWh) AS TotalGeneration_GWh,
-                ROUND(
-                    SUM(gr.Generation_GWh) * 100.0 /
-                    (SELECT SUM(g2.Generation_GWh) FROM GenerationRecord g2 WHERE g2.Year = ${year}),
-                2) AS ShareOfTotal_Pct
-            FROM GenerationRecord gr
-            INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
-            INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-            WHERE gr.Year = ${year}
-                AND gr.Generation_GWh > 0
-            GROUP BY es.SourceName, ec.CategoryName, ec.IsRenewable
-            ORDER BY TotalGeneration_GWh DESC
-            LIMIT 10
-        `;
-
-        const result = await sendQuery(query);
-
-        if (!result.success) {
-            msg.textContent = "Error: " + result.error;
-            return;
-        }
-
-        msg.textContent = `${result.data.length} sources found for ${year}.`;
-        buildTable(result.data, "r1_table");
-
-        // COMMENT: explain why the old chart is destroyed before drawing a new one
-        if (r1ChartInstance) r1ChartInstance.destroy();
-
-        // COMMENT: explain what data is being extracted here for the chart labels and values
-        const labels = result.data.map(r => r.SourceName);
-        const values = result.data.map(r => parseFloat(r.TotalGeneration_GWh));
-        const colors = result.data.map(r =>
-            r.IsRenewable == 1 ? "#2d6a4f" : "#c0392b"
-        );
-
-        // COMMENT: explain what Chart.js is doing here — creating a bar chart on the canvas element
-        const ctx = document.getElementById("r1_chart").getContext("2d");
-        r1ChartInstance = new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: `Generation (GWh) — ${year}`,
-                    data: values,
-                    backgroundColor: colors
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            // COMMENT: explain what this tooltip callback does — formats the number with commas
-                            label: ctx => " " + ctx.parsed.y.toLocaleString() + " GWh"
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: "GWh" }
-                    }
-                }
-            }
-        });
-    }
-
-    // COMMENT: explain what this function does — runs report 2, showing coverage gaps
-    async function runReport2() {
-        const year = document.getElementById("r2_year").value;
-        const msg  = document.getElementById("r2_msg");
-        msg.textContent = "Loading...";
-
-        // COMMENT: explain the LEFT JOIN used here and why it finds missing data
-        const query = `
-            SELECT
-                r.RegionName,
-                es.SourceName,
-                ec.CategoryName,
-                CASE
-                    WHEN rgr.Generation_GWh IS NULL THEN 'No Data'
-                    ELSE 'Recorded'
-                END AS DataStatus
-            FROM RegionEnergySource res
-            INNER JOIN Region r ON res.RegionID = r.RegionID
-            INNER JOIN EnergySource es ON res.SourceID = es.SourceID
-            INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-            LEFT JOIN RegionalGenerationRecord rgr
-                ON res.RegionID = rgr.RegionID
-                AND res.SourceID = rgr.SourceID
-                AND rgr.Year = ${year}
-            WHERE rgr.Generation_GWh IS NULL
-            ORDER BY r.RegionName, es.SourceName
-        `;
-
-        const result = await sendQuery(query);
-
-        if (!result.success) {
-            msg.textContent = "Error: " + result.error;
-            return;
-        }
-
-        msg.textContent = `${result.data.length} coverage gaps found for ${year}.`;
-        buildTable(result.data, "r2_table");
-    }
-
-    // COMMENT: explain what this function does — compares generation between two years
-    async function runReport3() {
-        const fromYear = document.getElementById("r3_from").value;
-        const toYear   = document.getElementById("r3_to").value;
-        const msg      = document.getElementById("r3_msg");
-
-        // COMMENT: explain this validation check — why we stop the user running the report with the same year twice
-        if (fromYear === toYear) {
-            msg.textContent = "Please select two different years.";
-            return;
-        }
-
-        msg.textContent = "Loading...";
-
-        // COMMENT: explain the self-join on GenerationRecord here — joining the table to itself to compare two years
-        const query = `
-            SELECT
-                es.SourceName,
-                ec.CategoryName,
-                prev.Generation_GWh AS Generation_${fromYear}_GWh,
-                curr.Generation_GWh AS Generation_${toYear}_GWh,
-                ROUND(curr.Generation_GWh - prev.Generation_GWh, 2) AS Change_GWh,
-                ROUND(
-                    (curr.Generation_GWh - prev.Generation_GWh) * 100.0 / NULLIF(prev.Generation_GWh, 0),
-                2) AS PercentChange
-            FROM GenerationRecord curr
-            INNER JOIN GenerationRecord prev
-                ON curr.SourceID = prev.SourceID
-                AND curr.Year = ${toYear}
-                AND prev.Year = ${fromYear}
-            INNER JOIN EnergySource es ON curr.SourceID = es.SourceID
-            INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-            ORDER BY Change_GWh DESC
-        `;
-
-        const result = await sendQuery(query);
-
-        if (!result.success) {
-            msg.textContent = "Error: " + result.error;
-            return;
-        }
-
-        msg.textContent = `Year-on-year change from ${fromYear} to ${toYear}.`;
-        buildTable(result.data, "r3_table");
-    }
-</script>
-
+ 
+<!-- JS is in its own file to keep HTML and logic separate -->
+<script src="matthew.js"></script>
+ 
 </body>
 </html>
