@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Samuel's Reports — UK Energy Monitor</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+    <a class="nav-title" href="../index.html">UK Energy Monitor</a>
+    <ul class="nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../dashboard.html">Dashboard</a></li>
+        <li><a href="../reports.html" class="active">Reports</a></li>
+        <li><a href="../data_entry.html">Data Entry</a></li>
+        <li><a href="../about.html">About</a></li>
+    </ul>
+</nav>
+
+<!-- PAGE HEADER -->
+<header class="page-header">
+    <h1>Samuel's Reports</h1>
+    <p>Three SQL-driven reports analysing UK regional energy profiles, underperforming sources, and grid carbon efficiency.</p>
+</header>
+
+<!-- REPORT 1 -->
+<div class="report-section">
+    <h2>Report 1 — Dominant Energy Category Per Region</h2>
+    <p class="report-meta">
+        Business question: What is the most generated energy category in each UK region?
+    </p>
+
+    <div class="param-row">
+        <button onclick="runReport1()">Run Report</button>
+    </div>
+
+    <p class="result-msg" id="r1_msg"></p>
+    <div id="r1_table"></div>
+
+    <div class="chart-wrap">
+        <canvas id="r1_chart"></canvas>
+    </div>
+</div>
+
+<!-- REPORT 2 -->
+<div class="report-section">
+    <h2>Report 2 — Underperforming Energy Sources</h2>
+    <p class="report-meta">
+        Business question: Which energy sources have never exceeded a threshold of total generation across all recorded years?
+    </p>
+
+    <div class="param-row">
+        <div>
+            <label for="r2_threshold">Max Total Generation (GWh)</label>
+            <select id="r2_threshold">
+                <option value="10">10 GWh</option>
+                <option value="50">50 GWh</option>
+                <option value="100">100 GWh</option>
+            </select>
+        </div>
+        <button onclick="runReport2()">Run Report</button>
+    </div>
+
+    <p class="result-msg" id="r2_msg"></p>
+    <div id="r2_table"></div>
+</div>
+
+<!-- REPORT 3 -->
+<div class="report-section">
+    <h2>Report 3 — Carbon Efficiency of UK Generation By Year</h2>
+    <p class="report-meta">
+        Business question: How carbon efficient is the UK's electricity generation, and is it improving over time?
+    </p>
+
+    <div class="param-row">
+        <button onclick="runReport3()">Run Report</button>
+    </div>
+
+    <p class="result-msg" id="r3_msg"></p>
+    <div id="r3_table"></div>
+
+    <div class="chart-wrap">
+        <canvas id="r3_chart"></canvas>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ &amp; UK Government Statistics
+</footer>
+
+<script src="reports_js/samuel_js.js"></script>
+
+</body>
+</html>
