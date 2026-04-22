@@ -141,3 +141,13 @@ VALUES
 (2035, 98.00, 180.000),  -- interim net zero pathway
 (2040, 99.00, 110.000),  -- interim net zero pathway
 (2050, 100.00, 0.000);   -- UK legally binding net zero target
+
+-- additional annual targets taken from UK Carbon Budget 3 (2018-2022) and Carbon Budget 4 (2023-2027)
+INSERT INTO EnergyEmissionsTarget (TargetYear, RenewableTarget_Pct, EmissionsTarget_MtCO2e)
+VALUES
+(2019, 25.00, 509.000),
+(2020, 28.00, 509.000),
+(2021, 30.00, 509.000),
+(2022, 42.00, 509.000),
+(2023, 46.00, 390.000),
+(2024, 51.00, 390.000);
