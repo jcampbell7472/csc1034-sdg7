@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matthew's Reports — UK Energy Monitor</title>
     <link rel="stylesheet" href="../css/style.css">
-    <!-- Chart.js is a library imported from a CDN used to draw charts on HTML canvas elements -->
+    <!-- Chart.js is imported from a CDN to draw charts on HTML canvas elements -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
- 
+
 <!-- NAV -->
 <nav>
     <a class="nav-title" href="../index.html">UK Energy Monitor</a>
@@ -21,13 +21,13 @@
         <li><a href="../about.html">About</a></li>
     </ul>
 </nav>
- 
+
 <!-- PAGE HEADER -->
 <header class="page-header">
     <h1>Matthew's Reports</h1>
     <p>Three SQL-driven reports analysing UK electricity generation and energy source trends.</p>
 </header>
- 
+
 <!-- REPORT 1 -->
 <div class="report-section">
     <h2>Report 1 — Top Energy Sources by National Generation</h2>
@@ -35,8 +35,8 @@
         Business question: Which energy sources generated the most electricity in a given year,
         and are they renewable or non-renewable?
     </p>
- 
-    <!-- This row contains the year dropdown and run button, making the report parameterised -->
+
+    <!-- year dropdown makes this a parameterised report — value is passed into the SQL WHERE clause -->
     <div class="param-row">
         <div>
             <label for="r1_year">Year</label>
@@ -46,18 +46,20 @@
                 <option value="2024" selected>2024</option>
             </select>
         </div>
-        <button onclick="runReport1()">Run Report</button>
+        <!-- id="r1_btn" lets JS find and disable this button while the query runs (double-submit protection) -->
+        <button id="r1_btn" onclick="runReport1()">Run Report</button>
     </div>
- 
+
+    <!-- result-msg shows row count or error after report runs -->
     <p class="result-msg" id="r1_msg"></p>
     <div id="r1_table"></div>
- 
-    <!-- Chart.js requires a canvas element to draw on, the id is used in JS to target it -->
+
+    <!-- Chart.js needs a canvas element to draw on; the id is used in JS -->
     <div class="chart-wrap">
         <canvas id="r1_chart"></canvas>
     </div>
 </div>
- 
+
 <!-- REPORT 2 -->
 <div class="report-section">
     <h2>Report 2 — Regional Generation Coverage Gaps</h2>
@@ -65,23 +67,23 @@
         Business question: Which regions have no recorded generation data for a given
         energy source in a selected year?
     </p>
- 
-    <!-- The year dropdown filters the LEFT JOIN condition so only gaps in that year are returned -->
+
     <div class="param-row">
         <div>
             <label for="r2_year">Year</label>
             <select id="r2_year">
+                <option value="2022">2022</option>
                 <option value="2023">2023</option>
                 <option value="2024" selected>2024</option>
             </select>
         </div>
-        <button onclick="runReport2()">Run Report</button>
+        <button id="r2_btn" onclick="runReport2()">Run Report</button>
     </div>
- 
+
     <p class="result-msg" id="r2_msg"></p>
     <div id="r2_table"></div>
 </div>
- 
+
 <!-- REPORT 3 -->
 <div class="report-section">
     <h2>Report 3 — Year-on-Year Generation Change by Source</h2>
@@ -89,37 +91,39 @@
         Business question: How has electricity generation from each energy source changed
         between two selected years?
     </p>
- 
-    <!-- The two dropdowns provide fromYear and toYear values that are inserted into the SQL query -->
+
+    <!-- two dropdowns let the user pick both years for comparison -->
     <div class="param-row">
         <div>
             <label for="r3_from">From Year</label>
             <select id="r3_from">
                 <option value="2022">2022</option>
                 <option value="2023" selected>2023</option>
+                <option value="2024">2024</option>
             </select>
         </div>
         <div>
             <label for="r3_to">To Year</label>
             <select id="r3_to">
+                <option value="2022">2022</option>
                 <option value="2023">2023</option>
                 <option value="2024" selected>2024</option>
             </select>
         </div>
-        <button onclick="runReport3()">Run Report</button>
+        <button id="r3_btn" onclick="runReport3()">Run Report</button>
     </div>
- 
+
     <p class="result-msg" id="r3_msg"></p>
     <div id="r3_table"></div>
 </div>
- 
+
 <!-- FOOTER -->
 <footer>
     UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ &amp; UK Government Statistics
 </footer>
- 
-<!-- JS is in its own file to keep HTML and logic separate -->
+
+<!-- JS is in a separate file to keep HTML and logic separate -->
 <script src="matthew.js"></script>
- 
+
 </body>
 </html>

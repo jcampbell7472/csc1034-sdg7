@@ -1,255 +1,47 @@
-:root {
-    --green: #2d6a4f;
-    --border: #e0e0e0;
-    --muted: #555;
-}
+/* =============================================
+   TOAST NOTIFICATIONS
+   Add this block to the bottom of style.css
+   ============================================= */
 
-* {
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    color: #111;
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 0 40px;
-}
-
-nav {
-    position: sticky; top: 0; background: #fff;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 40px; height: 56px; z-index: 100;
-}
-
-nav ul { list-style: none; display: flex; gap: 16px; }
-
-a { color: var(--green); text-decoration: none; }
-
-h1, h2, h3 { font-family: Georgia, serif; }
-
-img { width: 100%; border: 1px solid var(--border); }
-
-.bottom {
-    display: grid;
-    grid-template-columns: 1fr 260px;
-    gap: 40px;
-    margin-top: 40px;
-}
-
-.cards { display: flex; flex-direction: column; gap: 12px; }
-
-.card {
-    border: 1px solid var(--border);
-    padding: 16px;
-    color: #111;
-}
-
-.sdg-panel {
-    border: 1px solid var(--border);
-    padding: 16px;
-    background: #f7f7f7;
-}
-
-p { color: var(--muted); line-height: 1.6; margin-top: 8px; }
-
-input, select {
-    display: block;
-    width: 100%;
-    max-width: 400px;
-    padding: 8px;
-    border: 1px solid var(--border);
-    margin: 4px 0 12px;
-    font-size: 0.9rem;
-}
-
-label { font-size: 0.85rem; color: var(--muted); }
-
-button {
-    padding: 8px 20px;
-    background: var(--green);
-    color: #fff;
-    border: none;
-    cursor: pointer;
-}
-
-.entry-section {
-    margin-bottom: 40px;
-    padding-bottom: 40px;
-    border-bottom: 1px solid var(--border);
-}
-
-footer {
-    border-top: 1px solid var(--border);
-    padding: 16px 0;
-    margin-top: 40px;
-    font-size: 0.8rem;
-    color: var(--muted);
-    text-align: center;
-}
-
-.page-header {
-    text-align: center;
-    margin: 30px 0 10px 0;
-}
-
-.about-image img {
-    width: 100%;
-    max-height: 350px;
-    object-fit: cover;
-    margin-bottom: 20px;
-}
-
-.button {
-    display: inline-block;
-    padding: 8px 14px;
-    margin-top: 10px;
-    background: #2c3e50;
-    color: white;
-    text-decoration: none;
+/* Toast sits fixed at the bottom-right of the screen */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
     border-radius: 4px;
+    font-size: 0.88rem;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(8px);
+    /* smooth fade-in and slide-up transition */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+    max-width: 320px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* adding toast-visible triggers the transition */
+.toast.toast-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* green for success messages */
+.toast-success {
+    background: #2d6a4f;
+}
+
+/* red for error messages */
+.toast-error {
+    background: #c0392b;
 }
 
 /* =============================================
-   REPORTS PAGE STYLES
+   DISABLED BUTTON STATE
+   Gives visual feedback when button is loading
    ============================================= */
-
-/* bordered container for each report */
-.report-section {
-    border: 1px solid var(--border);
-    padding: 20px;
-    margin-bottom: 24px;
-}
-
-.report-section h2 {
-    font-family: Georgia, serif;
-    color: var(--green);
-    margin-bottom: 4px;
-}
-
-/* small grey text showing the business question under each report title */
-.report-meta {
-    font-size: 0.82rem;
-    color: #888;
-    margin-bottom: 12px;
-}
-
-/* row that holds filter dropdowns and run button side by side */
-.param-row {
-    display: flex;
-    gap: 12px;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    margin-bottom: 12px;
-}
-
-.param-row label {
-    display: block;
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-bottom: 4px;
-}
-
-/* override the global input/select width inside param-row so dropdowns don't stretch full width */
-.param-row input,
-.param-row select {
-    margin: 0;
-    width: auto;
-    min-width: 140px;
-}
-
-/* table styles used across all report output tables */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.88rem;
-    margin-top: 8px;
-}
-
-th {
-    background: var(--green);
-    color: #fff;
-    padding: 8px 10px;
-    text-align: left;
-}
-
-td {
-    padding: 7px 10px;
-    border-bottom: 1px solid var(--border);
-}
-
-tr:last-child td { border-bottom: none; }
-
-/* alternating row colour for readability */
-tr:nth-child(even) td { background: #f9f9f9; }
-
-/* small status message shown after a report runs */
-.result-msg {
-    font-size: 0.85rem;
-    color: var(--muted);
-    margin-top: 6px;
-    min-height: 18px;
-}
-
-/* constrains chart width so it doesn't stretch too wide */
-.chart-wrap {
-    max-width: 600px;
-    margin-top: 16px;
-}
-
-/* coloured badge used in the IsRenewable column */
-.renewable-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 2px;
-    font-size: 0.78rem;
-    font-weight: bold;
-}
-
-.badge-yes { background: #d4edda; color: #2d6a4f; }
-.badge-no  { background: #f8d7da; color: #721c24; }
-
-.report {
-    margin-bottom: 56px;
-    padding-bottom: 56px;
-    border-bottom: 1px solid var(--border);
-}
-
-.report h2 { margin-bottom: 8px; }
-.report p { margin-bottom: 24px; }
-
-canvas { max-width: 100%; }
-
-.stat-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
-    margin: 24px 0 48px;
-}
-
-.stat-card {
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.stat-value {
-    font-family: Georgia, serif;
-    font-size: 1.75rem;
-    color: var(--green);
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    color: var(--muted);
-}
-
-.chart-pie {
-    max-width: 350px;
-    margin: 0 auto;
-    display: block;
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
