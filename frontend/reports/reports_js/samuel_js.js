@@ -57,8 +57,7 @@ async function runReport1() {
     const msg = document.getElementById("r1_msg");
     msg.textContent = "Loading...";
 
-    const query = `
-        SELECT r.RegionName, ec.CategoryName,
+    const query = `SELECT r.RegionName, ec.CategoryName,
         ROUND(SUM(rgr.Generation_GWh), 2) AS TotalGeneration_GWh
         FROM RegionalGenerationRecord rgr
         INNER JOIN Region r ON rgr.RegionID = r.RegionID
@@ -123,8 +122,7 @@ async function runReport2() {
     msg.textContent = "Loading...";
 
     // the threshold value from the dropdown is inserted into HAVING to filter low-generating sources
-    const query = `
-        SELECT es.SourceName, ec.CategoryName, ec.IsRenewable,
+    const query = `SELECT es.SourceName, ec.CategoryName, ec.IsRenewable,
         COUNT(gr.Year) AS YearsRecorded,
         ROUND(SUM(gr.Generation_GWh), 2) AS TotalGeneration_GWh,
         ROUND(AVG(gr.Generation_GWh), 2) AS AvgGenerationPerYear_GWh
@@ -167,8 +165,7 @@ async function runReport3() {
 
     //LEFT JOIN used so years with no generation data still appear in results
     // NULLIF prevents divide by zero if total generation is 0 for a year
-    const query = `
-        SELECT aer.Year,
+    const query = `SELECT aer.Year,
         aer.EMISSIONS_MtCO2e AS ActualEmissions_MtCO2e,
         ROUND(SUM(gr.Generation_GWh), 2) AS TotalGeneration_GWh,
         ROUND(aer.EMISSIONS_MtCO2e / NULLIF(SUM(gr.Generation_GWh), 0) * 1000, 4) AS EmissionsPerGWh_ktCO2e

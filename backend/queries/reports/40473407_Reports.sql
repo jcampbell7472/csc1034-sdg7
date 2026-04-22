@@ -4,9 +4,9 @@
 -- Business question: What regions are the main non renewable contributers per year?
 
 -- Why is this report useful: Identify what regions are mainly non renewable based that must be improved
---in order to reach carbon emission goals
+-- in order to reach carbon emission goals
 
---Tables used: RegionalGenerationRecord, Region, EnergySource, EnergyCategory
+-- Tables used: RegionalGenerationRecord, Region, EnergySource, EnergyCategory
 
 CREATE VIEW vw_greatestFossilRegions AS
 SELECT
@@ -23,15 +23,15 @@ ORDER BY rgr.year
 
 SELECT * FROM vw_greatestFossilRegions
 
--- Report 2:  Energy difference for renewable and non renewable per region
+-- Report 2: Energy difference for renewable and non renewable per region
 -- Report title: Energy difference of renewable and non renewable sources per region
 -- Business question: What is the difference in power output between renewables
---non renewables by percentage
+-- non renewables by percentage
 
---Why is this report is useful: Allows analaysts to compare the output of renewable sources
---to non renewable sources in the form of a percentage relative to the ouput of non renewables
+-- Why is this report is useful: Allows analaysts to compare the output of renewable sources
+-- to non renewable sources in the form of a percentage relative to the ouput of non renewables
 
---Tables used: RegionalGenerationRecord, Region, EnergySource, EnergyCategory
+-- Tables used: RegionalGenerationRecord, Region, EnergySource, EnergyCategory
 
 CREATE VIEW vw_RegionalEnergyDifference AS
 SELECT

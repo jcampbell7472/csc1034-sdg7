@@ -130,26 +130,27 @@ async function runReport1() {
 
     // the year value from the dropdown is inserted into the WHERE clause —
     // this is what makes the report parameterised
-    const query = `
-        SELECT
-            es.SourceName,
-            ec.CategoryName,
-            ec.IsRenewable,
-            SUM(gr.Generation_GWh) AS TotalGeneration_GWh,
-            ROUND(
-                SUM(gr.Generation_GWh) * 100.0 /
-                (SELECT SUM(g2.Generation_GWh) FROM GenerationRecord g2 WHERE g2.Year = ${year}),
-            2) AS ShareOfTotal_Pct
-        FROM GenerationRecord gr
-        INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
-        INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-        WHERE gr.Year = ${year}
-            AND gr.Generation_GWh > 0
-        GROUP BY es.SourceName, ec.CategoryName, ec.IsRenewable
-        HAVING ShareOfTotal_Pct > 0
-        ORDER BY TotalGeneration_GWh DESC
-        LIMIT 10
-    `;
+    const query = `SELECT
+    es.SourceName,
+    ec.CategoryName,
+    ec.IsRenewable,
+    SUM(gr.Generation_GWh) AS TotalGeneration_GWh,
+    ROUND(
+        SUM(gr.Generation_GWh) * 100.0 /
+        (
+            SELECT SUM(g2.Generation_GWh)
+            FROM GenerationRecord g2
+            WHERE g2.Year = ${year}
+        )
+    , 2) AS ShareOfTotal_Pct
+FROM GenerationRecord gr
+INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
+INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
+WHERE gr.Year = ${year}
+  AND gr.Generation_GWh > 0
+GROUP BY es.SourceName, ec.CategoryName, ec.IsRenewable
+ORDER BY TotalGeneration_GWh DESC
+LIMIT 10;`;
 
     try {
         const result = await sendQuery(query);
@@ -231,8 +232,7 @@ async function runReport2() {
 
     // LEFT JOIN returns all expected region/source pairs; WHERE filters to only
     // those with no matching record — these are the coverage gaps
-    const query = `
-        SELECT
+    const query = `SELECT
             r.RegionName,
             es.SourceName,
             ec.CategoryName,
@@ -296,8 +296,7 @@ async function runReport3() {
 
     // GenerationRecord is aliased as curr (toYear) and prev (fromYear) so both
     // years appear as columns in the same result row
-    const query = `
-        SELECT
+    const query = `SELECT
             es.SourceName,
             ec.CategoryName,
             ec.IsRenewable,
