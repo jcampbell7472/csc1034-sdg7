@@ -1,0 +1,80 @@
+//Matthew Rollo
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Annual Emissions — UK Energy Monitor</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+    <a class="nav-title" href="index.html">UK Energy Monitor</a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><a href="data_entry.html" class="active">Data Entry</a></li>
+        <li><a href="about.html">About</a></li>
+    </ul>
+</nav>
+
+<header class="page-header">
+    <h1>Annual Emissions Records</h1>
+    <p>Manage yearly UK carbon emissions data.</p>
+</header>
+
+<div class="bottom">
+    <div class="cards">
+
+        <div class="card entry-section">
+            <h2 id="formTitle">Add Record</h2>
+
+            <p id="output" class="result-msg"></p>
+
+            <label for="year">Year</label>
+            <input type="number" id="year" placeholder="e.g. 2024">
+
+            <label for="emissions">Emissions (MtCO2e)</label>
+            <input type="number" id="emissions" placeholder="e.g. 371">
+
+            <div class="param-row" style="margin-top: 12px;">
+                <button id="submitBtn" onclick="submitForm()">Add Record</button>
+                <button onclick="resetForm()">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Quick Links</h3>
+            <p>Manage other records in the system.</p>
+            <a href="generation.html" class="button">National Generation</a><br><br>
+            <a href="targets.html" class="button">Energy Targets</a>
+        </div>
+    </div>
+</div>
+
+<h2 style="margin-top: 32px;">Records</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Emissions (MtCO2e)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="recordsBody"></tbody>
+</table>
+
+<footer>
+    UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ &amp; UK Government Statistics
+</footer>
+
+<script src="js/emissions.js"></script>
+
+</body>
+</html>
