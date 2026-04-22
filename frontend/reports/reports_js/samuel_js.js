@@ -1,6 +1,6 @@
 //Samuel Campbell
 //PHP_URL stores the path to dbConnector.php which handles all communication between the front end and the MySQL database
-const PHP_URL = "../dbConnector.php";
+const PHP_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
 
 //sendQuery takes a SQL string, sends it as a POST request to dbConnector.php, and returns the parsed JSON response
 async function sendQuery(query) {

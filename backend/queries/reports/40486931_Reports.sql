@@ -13,26 +13,26 @@ USE energy_monitoring;
 -- Tables used: RegionalGenerationRecord, Region, EnergySource, EnergyCategory
 -- 
 
---a view is created here so this query can be reused across the system without rewriting it
+-- a view is created here so this query can be reused across the system without rewriting it
 CREATE VIEW vw_DominantCategoryPerRegion AS
 SELECT
     r.RegionName,
     ec.CategoryName,
-    --round is used to keep the output to 2 decimal places for readability
+    -- round is used to keep the output to 2 decimal places for readability
     ROUND(SUM(rgr.Generation_GWh), 2) AS TotalGeneration_GWh
 FROM RegionalGenerationRecord rgr
---inner join region to get the region name instead of just the id
+-- inner join region to get the region name instead of just the id
 INNER JOIN Region r ON rgr.RegionID = r.RegionID
---inner join energysource to link generation records to their source
+-- inner join energysource to link generation records to their source
 INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
---inner join energycategory to get the category name (renewable / non-renewable)
+-- inner join energycategory to get the category name (renewable / non-renewable)
 INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
---group by region and category so sum aggregates generation for each combination
+-- group by region and category so sum aggregates generation for each combination
 GROUP BY r.RegionName, ec.CategoryName
---order by region first, then generation descending so the dominant category appears first per region
+-- order by region first, then generation descending so the dominant category appears first per region
 ORDER BY r.RegionName, TotalGeneration_GWh DESC;
 
---query the view to return all results
+-- query the view to return all results
 SELECT * FROM vw_DominantCategoryPerRegion;
 
 
@@ -50,24 +50,24 @@ SELECT * FROM vw_DominantCategoryPerRegion;
 SELECT
     es.SourceName,
     ec.CategoryName,
-    --isrenewable is a boolean stored as 1 or 0, included to show whether underperforming sources are renewable or not
+    -- isrenewable is a boolean stored as 1 or 0, included to show whether underperforming sources are renewable or not
     ec.IsRenewable,
-    --count counts how many years of data exist for each source
+    -- count counts how many years of data exist for each source
     COUNT(gr.Year) AS YearsRecorded,
     ROUND(SUM(gr.Generation_GWh), 2) AS TotalGeneration_GWh,
-    --avg shows the average generation per year, giving context alongside the total
+    -- avg shows the average generation per year, giving context alongside the total
     ROUND(AVG(gr.Generation_GWh), 2) AS AvgGenerationPerYear_GWh
 FROM GenerationRecord gr
---inner join energysource to get the source name instead of just the id
+-- inner join energysource to get the source name instead of just the id
 INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
---inner join energycategory to get the category and renewable flag
+-- inner join energycategory to get the category and renewable flag
 INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
---group by source so aggregate functions calculate per energy source
+-- group by source so aggregate functions calculate per energy source
 GROUP BY es.SourceName, ec.CategoryName, ec.IsRenewable
---having filters on the aggregated total, keeping only sources below the 10 gwh threshold
---where cannot be used here as it runs before aggregation, having runs after
+-- having filters on the aggregated total, keeping only sources below the 10 gwh threshold
+-- where cannot be used here as it runs before aggregation, having runs after
 HAVING TotalGeneration_GWh <= 10
---order by ascending so the lowest generating sources appear first
+-- order by ascending so the lowest generating sources appear first
 ORDER BY TotalGeneration_GWh ASC;
 
 
@@ -88,14 +88,14 @@ SELECT
     aer.EMISSIONS_MtCO2e AS ActualEmissions_MtCO2e,
     ROUND(SUM(gr.Generation_GWh), 2) AS TotalGeneration_GWh,
     ROUND(
-        --nullif returns null if total generation is 0, preventing a divide by zero error
-        --the result is multiplied by 1000 to convert from mtco2e per gwh to ktco2e per gwh
+        -- nullif returns null if total generation is 0, preventing a divide by zero error
+        -- the result is multiplied by 1000 to convert from mtco2e per gwh to ktco2e per gwh
         aer.EMISSIONS_MtCO2e / NULLIF(SUM(gr.Generation_GWh), 0) * 1000,
     4) AS EmissionsPerGWh_ktCO2e
 FROM AnnualEmissionsRecord aer
---left join is used instead of inner join so years with no generation records still appear in results
+-- left join is used instead of inner join so years with no generation records still appear in results
 LEFT JOIN GenerationRecord gr ON aer.Year = gr.Year
---group by year and emissions so sum aggregates all generation records for each year
+-- group by year and emissions so sum aggregates all generation records for each year
 GROUP BY aer.Year, aer.EMISSIONS_MtCO2e
---order by year ascending to show the trend from earliest to most recent
+-- order by year ascending to show the trend from earliest to most recent
 ORDER BY aer.Year ASC;

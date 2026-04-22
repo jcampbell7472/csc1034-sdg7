@@ -1,7 +1,7 @@
 const fetchRecords = async () => {
     const sql = "SELECT gr.GenerationID, es.SourceID, es.SourceName, gr.Year, gr.Generation_GWh FROM GenerationRecord gr INNER JOIN EnergySource es ON gr.SourceID = es.SourceID ORDER BY gr.Year";
 
-    const response = await fetch("dbConnector.php", {
+    const response = await fetch("https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php", {
         method: "POST",
         body: new URLSearchParams({ query: sql })
     });

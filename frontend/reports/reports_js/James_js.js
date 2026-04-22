@@ -1,4 +1,4 @@
-const url = "../dbConnector.php";
+const url = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
 
 const RunQuery = async (query) => {
     const response = await fetch(url, {

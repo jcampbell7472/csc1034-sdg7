@@ -16,7 +16,7 @@ const loadReport1 = async () => {
         HAVING TotalGeneration_GWh > 0
         ORDER BY gr.Year`;
 
-    const response = await fetch("../dbConnector.php", {
+    const response = await fetch("https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php", {
         method: "POST",
         body: new URLSearchParams({ query: sql })
     });

@@ -9,7 +9,7 @@ let selectedYear = null;
 const fetchTargets = async () => {
     const sql = "SELECT TargetYear, RenewableTarget_Pct, EmissionsTarget_MtCO2e FROM EnergyEmissionsTarget ORDER BY TargetYear";
 
-    const response = await fetch("dbConnector.php", {
+    const response = await fetch("https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php", {
         method: "POST",
         body: new URLSearchParams({ query: sql })
     });

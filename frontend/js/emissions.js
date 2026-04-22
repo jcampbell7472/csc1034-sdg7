@@ -1,6 +1,6 @@
 // simple CRUD for AnnualEmissionsRecord
 
-const API_URL = "http://localhost:8000/dbConnector.php";
+const API_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
 
 let selectedYear = null;
 
