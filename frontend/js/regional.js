@@ -45,78 +45,15 @@ const fetchSources = async () => {
     }
 };
 
-// fetchRecords loads all regional generation records and builds the table
-const fetchRecords = async () => {
-    const sql = `
-        SELECT rgr.RegionalGenerationID, r.RegionName, es.SourceName,
-        rgr.Year, rgr.Generation_GWh
-        FROM RegionalGenerationRecord rgr
-        INNER JOIN Region r ON rgr.RegionID = r.RegionID
-        INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
-        ORDER BY rgr.Year DESC, r.RegionName
-    `;
-
-    const result = await sendQuery(sql);
-    const tbody = document.querySelector("#recordsBody");
-    tbody.innerHTML = "";
-
-    for (const row of result.data) {
-        tbody.innerHTML += `<tr>
-            <td>${row.RegionalGenerationID}</td>
-            <td>${row.RegionName}</td>
-            <td>${row.SourceName}</td>
-            <td>${row.Year}</td>
-            <td>${row.Generation_GWh}</td>
-            <td>
-                <button onclick="editRecord(${row.RegionalGenerationID}, ${row.RegionID}, ${row.SourceID}, ${row.Year}, ${row.Generation_GWh})">Edit</button>
-                <button onclick="deleteRecord(${row.RegionalGenerationID})">Delete</button>
-            </td>
-        </tr>`;
-    }
-};
-
-// deleteRecord asks for confirmation then deletes the selected record by ID
-const deleteRecord = async (id) => {
-    // confirmation prevents accidental deletion
-    const confirmed = confirm("Are you sure you want to delete this record?");
-    if (!confirmed) return;
-
-    const result = await sendQuery(`DELETE FROM RegionalGenerationRecord WHERE RegionalGenerationID = ${id}`);
-
-    if (result.success) {
-        showMessage("Record deleted successfully.", "success");
-        fetchRecords();
-    } else {
-        showMessage("Failed to delete record.", "error");
-    }
-};
-
-// selectedID tracks which record is being edited, null means we are adding a new record
-let selectedID = null;
-
-// editRecord populates the form with the selected record's values ready for editing
-const editRecord = (id, regionID, sourceID, year, generation) => {
-    selectedID = id;
-    document.querySelector("#regionID").value = regionID;
-    document.querySelector("#sourceID").value = sourceID;
-    document.querySelector("#year").value = year;
-    document.querySelector("#generation").value = generation;
-    document.querySelector("#formTitle").textContent = "Edit Record";
-    document.querySelector("#submitBtn").textContent = "Update Record";
-};
-
 // resetForm clears all inputs and returns the form to add mode
 const resetForm = () => {
-    selectedID = null;
     document.querySelector("#regionID").value = "";
     document.querySelector("#sourceID").value = "";
     document.querySelector("#year").value = "";
     document.querySelector("#generation").value = "";
-    document.querySelector("#formTitle").textContent = "Add Record";
-    document.querySelector("#submitBtn").textContent = "Add Record";
 };
 
-// submitForm validates inputs then either inserts a new record or updates an existing one
+// submitForm validates inputs then inserts a new record into RegionalGenerationRecord
 const submitForm = async () => {
     const regionID = document.querySelector("#regionID").value;
     const sourceID = document.querySelector("#sourceID").value;
@@ -145,22 +82,13 @@ const submitForm = async () => {
     const submitBtn = document.querySelector("#submitBtn");
     submitBtn.disabled = true;
 
-    let sql;
-
-    if (selectedID) {
-        // update existing record if an ID is selected
-        sql = `UPDATE RegionalGenerationRecord SET RegionID = ${regionID}, SourceID = ${sourceID}, Year = ${year}, Generation_GWh = ${generation} WHERE RegionalGenerationID = ${selectedID}`;
-    } else {
-        // insert new record if no ID is selected
-        sql = `INSERT INTO RegionalGenerationRecord (RegionID, SourceID, Year, Generation_GWh) VALUES (${regionID}, ${sourceID}, ${year}, ${generation})`;
-    }
+    const sql = `INSERT INTO RegionalGenerationRecord (RegionID, SourceID, Year, Generation_GWh) VALUES (${regionID}, ${sourceID}, ${year}, ${generation})`;
 
     const result = await sendQuery(sql);
 
     if (result.success) {
-        showMessage(selectedID ? "Record updated successfully." : "Record added successfully.", "success");
+        showMessage("Record added successfully.", "success");
         resetForm();
-        fetchRecords();
     } else {
         showMessage("Operation failed. Please try again.", "error");
     }
@@ -169,7 +97,6 @@ const submitForm = async () => {
     submitBtn.disabled = false;
 };
 
-// load regions, sources and existing records when the page first loads
+// load regions and sources when the page first loads
 fetchRegions();
 fetchSources();
-fetchRecords();
