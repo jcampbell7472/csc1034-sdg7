@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regional Generation Records — UK Energy Monitor</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav>
+    <a class="nav-title" href="index.html">UK Energy Monitor</a>
+    <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="reports.html">Reports</a></li>
+        <li><a href="data_entry.html" class="active">Data Entry</a></li>
+        <li><a href="about.html">About</a></li>
+    </ul>
+</nav>
+
+<header class="page-header">
+    <h1>Regional Generation Records</h1>
+    <p>Add, edit and delete regional electricity generation records by region, source and year.</p>
+</header>
+
+<div class="bottom">
+    <div class="cards">
+
+        <div class="card entry-section">
+            <h2 id="formTitle">Add Record</h2>
+
+            <p id="output" class="result-msg"></p>
+
+            <label for="regionID">Region</label>
+            <select id="regionID">
+                <option value="">-- Select Region --</option>
+            </select>
+
+            <label for="sourceID">Energy Source</label>
+            <select id="sourceID">
+                <option value="">-- Select Source --</option>
+            </select>
+
+            <label for="year">Year</label>
+            <input type="number" id="year" placeholder="e.g. 2024">
+
+            <label for="generation">Generation (GWh)</label>
+            <input type="number" id="generation" placeholder="e.g. 5000">
+
+            <div class="param-row" style="margin-top: 12px;">
+                <button id="submitBtn" onclick="submitForm()">Add Record</button>
+                <button onclick="resetForm()">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <h3>Quick Links</h3>
+            <p>Manage other records in the system.</p>
+            <a href="generation.html" class="button" style="margin-bottom: 8px; display: inline-block;">National Generation</a>
+            <a href="targets.html" class="button" style="display: inline-block;">Energy Targets</a>
+        </div>
+    </div>
+</div>
+
+<h2 style="margin-top: 32px;">Records</h2>
+<table id="recordsTable">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Region</th>
+            <th>Source</th>
+            <th>Year</th>
+            <th>Generation (GWh)</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="recordsBody"></tbody>
+</table>
+
+<footer>
+    UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ &amp; UK Government Statistics
+</footer>
+
+<script src="js/regional.js"></script>
+
+</body>
+</html>
