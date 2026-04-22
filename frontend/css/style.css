@@ -253,3 +253,46 @@ canvas { max-width: 100%; }
     margin: 0 auto;
     display: block;
 }
+
+/* Toast sits fixed at the bottom-right of the screen */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    padding: 12px 20px;
+    border-radius: 4px;
+    font-size: 0.88rem;
+    color: #fff;
+    opacity: 0;
+    transform: translateY(8px);
+    /* smooth fade-in and slide-up transition */
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    z-index: 9999;
+    max-width: 320px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+/* adding toast-visible triggers the transition */
+.toast.toast-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* green for success messages */
+.toast-success {
+    background: #2d6a4f;
+}
+
+/* red for error messages */
+.toast-error {
+    background: #c0392b;
+}
+
+/* =============================================
+   DISABLED BUTTON STATE
+   Gives visual feedback when button is loading
+   ============================================= */
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
