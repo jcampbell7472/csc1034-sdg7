@@ -33,6 +33,7 @@ const chart1 = async () => {
         data: {
             labels: regionYears,
             datasets: [{
+                label: "Year and region",
                 backgroundColor: "#237819",
                 data: totalGWhs
             }]
@@ -56,6 +57,7 @@ const chart2 = async () => {
         data: {
             labels: regionYears,
             datasets: [{
+                label: "Year and region",
                 backgroundColor: "#237819",
                 data: renewPercent 
             }]
@@ -81,6 +83,7 @@ const chart3 = async () => {
         data: {
             labels: yearSource,
             datasets: [{
+                label: "Year and source",
                 backgroundColor: "#237819",
                 data: gen_GWhs
             }]
