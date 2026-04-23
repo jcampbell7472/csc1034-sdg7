@@ -8,6 +8,12 @@ const RunQuery = async (query) => {
     });
 
     const result = await response.json();
+
+    if (result.error){
+        console.error("Server Error", result.error)
+        console.log("Failed query:", query);
+        return [];
+    }
     return result.data;
 }
 
@@ -69,7 +75,9 @@ const chart3 = async () => {
 
     const yearSource = [];
     const gen_GWhs = [];
-
+    
+    if (!records || records.length === 0) return;
+    
     for(let i=0; i<records.length; i++){
         yearSource.push(records[i].YearSource);
         gen_GWhs.push(parseFloat(records[i].Generation_GWh));

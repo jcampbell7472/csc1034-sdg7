@@ -16,12 +16,9 @@ FROM RegionalGenerationRecord rgr
 INNER JOIN Region r ON rgr.RegionID = r.RegionID
 INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
 INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-GROUP BY RegionName, rgr.year
-HAVING SUM(CASE WHEN ec.IsRenewable = 0 THEN rgr.Generation_GWh END) > SUM(CASE WHEN ec.IsRenewable = 1 THEN rgr.Generation_GWh END)
-ORDER BY rgr.year
+GROUP BY r.RegionName, rgr.year
+HAVING SUM(CASE WHEN ec.IsRenewable = 0 THEN rgr.Generation_GWh END) > SUM(CASE WHEN ec.IsRenewable = 1 THEN rgr.Generation_GWh END);
 
-
-SELECT * FROM vw_greatestFossilRegions
 
 -- Report 2: Energy difference for renewable and non renewable per region
 -- Report title: Energy difference of renewable and non renewable sources per region
@@ -49,11 +46,10 @@ FROM RegionalGenerationRecord rgr
 INNER JOIN Region r ON rgr.RegionID = r.RegionID
 INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
 INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-GROUP BY RegionName, rgr.year
-HAVING RenewablePercentDiff != 0.00
-ORDER BY rgr.year DESC;
+GROUP BY r.RegionName, rgr.year
+HAVING ROUND(SUM(CASE WHEN ec.IsRenewable = 1 THEN rgr.Generation_GWh ELSE 0 END)
+           / SUM(CASE WHEN ec.IsRenewable = 0 THEN rgr.Generation_GWh ELSE 0 END) * 100, 2) != 0.00;
 
-SELECT * FROM vw_RegionalEnergyDifference
 
 -- Report 3: Generation of wind and solar per year
 -- Report title: Generation of wind and solar per year
