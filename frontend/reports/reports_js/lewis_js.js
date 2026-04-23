@@ -4,24 +4,29 @@ const showMessage = (elementId, text, type) => {
     output.className = type;
 };
 
-// Report 1, renewable vs non renewable share by year including percentage share
+const API_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
+
+// Report 1
 const loadReport1 = async () => {
     const sql = `SELECT gr.Year, ec.CategoryName, 
         ROUND(SUM(gr.Generation_GWh), 2) AS TotalGeneration_GWh,
-        ROUND(SUM(gr.Generation_GWh) * 100.0 / (SELECT SUM(g2.Generation_GWh) FROM GenerationRecord g2 WHERE g2.Year = gr.Year), 2) AS Percentage
+        ROUND(SUM(gr.Generation_GWh) * 100.0 / 
+        (SELECT SUM(g2.Generation_GWh) FROM GenerationRecord g2 WHERE g2.Year = gr.Year), 2) AS Percentage
         FROM GenerationRecord gr
         INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
         INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
         GROUP BY gr.Year, ec.CategoryName
-        HAVING TotalGeneration_GWh > 0
+        HAVING SUM(gr.Generation_GWh) > 0
         ORDER BY gr.Year`;
 
-    const response = await fetch("https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php", {
+    const response = await fetch(API_URL, {
         method: "POST",
         body: new URLSearchParams({ query: sql })
     });
 
     const result = await response.json();
+    console.log("Report1:", result);
+
     const tbody = document.querySelector("#report1Body");
     tbody.innerHTML = "";
 
@@ -51,6 +56,7 @@ const buildChart1 = (data) => {
     for (const year of years) {
         let renewableVal = 0;
         let nonRenewableVal = 0;
+
         for (const row of data) {
             if (row.Year == year && row.CategoryName === "Renewable") {
                 renewableVal = row.Percentage;
@@ -59,6 +65,7 @@ const buildChart1 = (data) => {
                 nonRenewableVal = row.Percentage;
             }
         }
+
         renewable.push(renewableVal);
         nonRenewable.push(nonRenewableVal);
     }
@@ -76,27 +83,29 @@ const buildChart1 = (data) => {
     });
 };
 
-// Report 2, shows top regions and sources for renewable generation filtered by year
+// Report 2
 const loadReport2 = async () => {
     const year = document.querySelector("#yearFilter").value;
 
-    const sql = `SELECT r.RegionName, es.SourceName, ROUND(SUM(rgr.Generation_GWh), 2) AS TotalGeneration_GWh
+    const sql = `SELECT TOP 10 r.RegionName, es.SourceName, 
+        ROUND(SUM(rgr.Generation_GWh), 2) AS TotalGeneration_GWh
         FROM RegionalGenerationRecord rgr
         INNER JOIN Region r ON rgr.RegionID = r.RegionID
         INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
         INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
         WHERE rgr.Year = ${year} AND ec.IsRenewable = 1
         GROUP BY r.RegionName, es.SourceName
-        HAVING TotalGeneration_GWh > 0
-        ORDER BY TotalGeneration_GWh DESC
-        LIMIT 10`;
+        HAVING SUM(rgr.Generation_GWh) > 0
+        ORDER BY TotalGeneration_GWh DESC`;
 
-    const response = await fetch("../dbConnector.php", {
+    const response = await fetch(API_URL, {
         method: "POST",
         body: new URLSearchParams({ query: sql })
     });
 
     const result = await response.json();
+    console.log("Report2:", result);
+
     const tbody = document.querySelector("#report2Body");
     tbody.innerHTML = "";
 
@@ -134,22 +143,26 @@ const buildChart2 = (data) => {
     });
 };
 
-// Report 3, compares actual UK emissions against government targets and calculates difference
+// Report 3
 const loadReport3 = async () => {
-    const sql = `SELECT aer.Year, aer.EMISSIONS_MtCO2e AS ActualEmissions, 
+    const sql = `SELECT aer.Year, 
+        aer.EMISSIONS_MtCO2e AS ActualEmissions, 
         eet.EmissionsTarget_MtCO2e AS TargetEmissions, 
         eet.RenewableTarget_Pct AS RenewableTarget,
         ROUND(aer.EMISSIONS_MtCO2e - eet.EmissionsTarget_MtCO2e, 2) AS DifferenceFromTarget
         FROM AnnualEmissionsRecord aer
-        LEFT JOIN EnergyEmissionsTarget eet ON aer.Year = eet.TargetYear
+        LEFT JOIN EnergyEmissionsTarget eet 
+            ON aer.Year = eet.TargetYear
         ORDER BY aer.Year`;
 
-    const response = await fetch("../dbConnector.php", {
+    const response = await fetch(API_URL, {
         method: "POST",
         body: new URLSearchParams({ query: sql })
     });
 
     const result = await response.json();
+    console.log("Report3:", result);
+
     const tbody = document.querySelector("#report3Body");
     tbody.innerHTML = "";
 
@@ -157,13 +170,16 @@ const loadReport3 = async () => {
         tbody.innerHTML += `<tr>
             <td>${row.Year}</td>
             <td>${row.ActualEmissions}</td>
-            <td>${row.TargetEmissions ? row.TargetEmissions : "N/A"}</td>
-            <td>${row.RenewableTarget ? row.RenewableTarget : "N/A"}</td>
-            <td>${row.DifferenceFromTarget ? row.DifferenceFromTarget : "N/A"}</td>
-            </tr>`;
+            <td>${row.TargetEmissions ?? "N/A"}</td>
+            <td>${row.RenewableTarget ?? "N/A"}</td>
+            <td>${row.DifferenceFromTarget ?? "N/A"}</td>
+        </tr>`;
     }
 };
 
-loadReport1();
-loadReport2();
-loadReport3();
+// Load all
+window.onload = () => {
+    loadReport1();
+    loadReport2();
+    loadReport3();
+};
