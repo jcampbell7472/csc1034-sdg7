@@ -85,7 +85,9 @@ const buildChart1 = (data) => {
 
 // Report 2
 const loadReport2 = async () => {
+    console.log("loadReport2 triggered");
     const year = document.querySelector("#yearFilter").value;
+    console.log("Selected year:", year);
 
     const sql = `SELECT TOP 10 r.RegionName, es.SourceName, 
         ROUND(SUM(rgr.Generation_GWh), 2) AS TotalGeneration_GWh
