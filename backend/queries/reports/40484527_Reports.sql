@@ -1,10 +1,8 @@
 -- Jake Campbell 40484527
 -- 3 SQL Reports
 -- Report 1: Renewable Generation Progress Toward 2030 Target
--- Business Question: How is the UK's renewable generation percentage trending
---   against the 2030 clean power target of 95%?
--- Why this report is useful: Shows whether the UK is on track to meet its 2030
---   clean energy target by comparing actual renewable share each year against the goal.
+-- Business Question: How much progress is the UK's renewable generation making towards the 2030 target of 95% of energy coming from renewable sources?
+-- Why this report is useful: Shows whether the UK is on track to meet its 2030 clean energy target.
 -- Tables used: GenerationRecord, EnergySource, EnergyCategory, EnergyEmissionsTarget
 CREATE VIEW vw_RenewableProgressTo2030 AS
 SELECT gr.Year,
@@ -14,14 +12,11 @@ SELECT gr.Year,
                 WHEN ec.IsRenewable = 1 THEN gr.Generation_GWh
                 ELSE 0
             END
-        ) * 100.0 / SUM(gr.Generation_GWh),
-        2
-    ) AS RenewablePct,
-    (
+        ) * 100.0 / SUM(gr.Generation_GWh),2) AS RenewablePct,(
         SELECT RenewableTarget_Pct
         FROM EnergyEmissionsTarget
         WHERE TargetYear = 2030
-    ) AS Target_2030_Pct
+        ) AS Target_2030_Pct
 FROM GenerationRecord gr
     INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
     INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
@@ -31,10 +26,8 @@ SELECT *
 FROM vw_RenewableProgressTo2030;
 
 -- Report 2: Regional Contribution to National Generation by Source
--- Business Question: For each energy source, how much does each UK region
---   contribute to the national total?
--- Why this report is useful: Identifies which regions are driving generation
---   for each source, useful for targeting regional investment.
+-- Business Question: For each energy source, how much does each UK region contribute to the national total?
+-- Why this report is useful: Identifies which regions are driving generation for each source, useful for targeting regional investment.
 -- Tables used: RegionalGenerationRecord, GenerationRecord, Region, EnergySource
 CREATE VIEW vw_RegionalContribution AS
 SELECT r.RegionName,
@@ -45,9 +38,7 @@ SELECT r.RegionName,
             SELECT SUM(gr.Generation_GWh)
             FROM GenerationRecord gr
             WHERE gr.SourceID = rgr.SourceID
-        ),
-        2
-    ) AS ContributionPct
+        ),2) AS ContributionPct
 FROM RegionalGenerationRecord rgr
     INNER JOIN Region r ON rgr.RegionID = r.RegionID
     INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
@@ -60,10 +51,8 @@ SELECT *
 FROM vw_RegionalContribution;
 
 -- Report 3: Year-on-Year Emissions Reduction
--- Business Question: How much have UK carbon emissions fallen each year,
---   and is the rate of reduction improving?
--- Why this report is useful: Shows whether the UK is accelerating or slowing
---   its emissions reduction, which is key to assessing net zero progress.
+-- Business Question: How much have UK carbon emissions fallen each year, and is the rate of reduction improving?
+-- Why this report is useful: Shows whether the UK's emissions are increasing or decreasing compared to the previous year, useful for identifying if progress is being made.
 -- Tables used: AnnualEmissionsRecord
 SELECT curr.Year,
     curr.EMISSIONS_MtCO2e AS Emissions_MtCO2e,

@@ -1,5 +1,6 @@
 const API_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
 
+//function to send a query to the database, returns null on error
 async function sendQuery(query) {
     const response = await fetch(API_URL, {
         method: "POST",
@@ -15,19 +16,25 @@ async function sendQuery(query) {
 }
 
 async function loadReport1() {
+    //send query
     const data = await sendQuery("SELECT * FROM vw_RenewableProgressTo2030");
-    if (!data) return;
+    //if data is not found, return
+    if (!data){
+        return;
+    } 
 
-    const labels = [];
-    const actual = [];
-    const target = [];
+    const labels = []; //years
+    const actual = []; //renewable % per year
+    const target = []; //2030 target value
 
+    //fill arrays with data
     for (let i = 0; i < data.length; i++) {
         labels.push(data[i].Year);
         actual.push(parseFloat(data[i].RenewablePct));
         target.push(parseFloat(data[i].Target_2030_Pct));
     }
 
+    //build line graph
     new Chart(document.getElementById("chart1"), {
         type: "line",
         data: {
@@ -59,8 +66,12 @@ async function loadReport1() {
 }
 
 async function loadReport2() {
+    //send query
     const data = await sendQuery("SELECT * FROM vw_RegionalContribution");
-    if (!data) return;
+    //if data not found, return
+    if (!data){
+        return;
+    }
 
     const colours = ["#2d6a4f", "#52b788", "#aaa", "#ccc"];
 
@@ -95,6 +106,7 @@ async function loadReport2() {
         });
     }
 
+    //build stacked bar chart
     new Chart(document.getElementById("chart2"), {
         type: "bar",
         data: { labels: sources, datasets: datasets },
@@ -108,14 +120,18 @@ async function loadReport2() {
 }
 
 async function loadReport3() {
+    //send query
     const query = "SELECT curr.Year, ROUND(prev.EMISSIONS_MtCO2e - curr.EMISSIONS_MtCO2e, 3) AS Reduction_MtCO2e FROM AnnualEmissionsRecord curr INNER JOIN AnnualEmissionsRecord prev ON curr.Year = prev.Year + 1 ORDER BY curr.Year";
     const data = await sendQuery(query);
-    if (!data) return;
+    if (!data){
+        return;
+    }
 
-    const labels = [];
-    const reductions = [];
-    const colours = [];
+    const labels = []; //years
+    const reductions = []; //reduction from previous year
+    const colours = []; //red or green
 
+    //fill arrays with data
     for (let i = 0; i < data.length; i++) {
         labels.push(data[i].Year);
         const val = parseFloat(data[i].Reduction_MtCO2e);
@@ -123,6 +139,7 @@ async function loadReport3() {
         colours.push(val >= 0 ? "#2d6a4f" : "#c0392b");
     }
 
+    //build bar chart
     new Chart(document.getElementById("chart3"), {
         type: "bar",
         data: {
