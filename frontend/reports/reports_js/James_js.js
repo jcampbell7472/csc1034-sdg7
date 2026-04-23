@@ -64,14 +64,7 @@ const chart2 = async () => {
 }
 
 const chart3 = async () => {
-    const records = await RunQuery(`
-        SELECT CONCAT(gr.Year, ' ', es.SourceName) AS YearSource, 
-               gr.Generation_GWh
-        FROM GenerationRecord gr 
-        LEFT JOIN EnergySource es ON gr.SourceID = es.SourceID 
-        WHERE es.SourceName IN ('Solar', 'Wind') 
-        ORDER BY gr.Year, es.SourceName DESC;
-    `);
+    const records = await RunQuery(`SELECT CONCAT(gr.Year, ' ', es.SourceName) AS YearSource, gr.Generation_GWh FROM GenerationRecord gr LEFT JOIN EnergySource es ON gr.SourceID = es.SourceID WHERE es.SourceName IN ('Solar', 'Wind') ORDER BY gr.Year, es.SourceName DESC;`);
 
     const yearSource = [];
     const gen_GWhs = [];
