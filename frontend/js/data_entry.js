@@ -39,6 +39,21 @@ function getValue(id) {
     return document.getElementById(id).value;
 }
 
+// check if value is a whole number
+function isInt(value) {
+    return Number.isInteger(Number(value));
+}
+
+// check if value is a positive number (for GWh, emissions, % etc)
+function isPositiveNumber(value) {
+    return !isNaN(value) && Number(value) >= 0;
+}
+
+// check if year is sensible
+function isValidYear(year) {
+    return isInt(year) && year >= 1900 && year <= 2100;
+}
+
 //function to load a table from the database using the page's dropdown menu
 //async function to allow use of await
 async function loadTable() {
@@ -108,6 +123,11 @@ async function deleteRecord() {
     if (!table || !id) {
         document.getElementById("deleteResult").innerText = "Please fill in all fields."; return;
     }
+    //validate that id input is an integer
+    if (!isInt(id)) {
+        document.getElementById("deleteResult").innerText = "ID must be a number.";
+        return;
+    }
     //send query to database
     await sendQuery(`DELETE FROM ${table} WHERE ${pk} = ${id}`, "deleteResult");
 }
@@ -124,30 +144,76 @@ async function updateRecord() {
     if (!table || !id || !column || !value) {
         document.getElementById("updateResult").innerText = "All fields are required."; return;
     }
+    //validate that inputted id is an integer
+    if (!isInt(id)) {
+        document.getElementById("updateResult").innerText = "ID must be a number.";
+        return;
+    }
+    // prevent editing primary key
+    if (column === pk) {
+        document.getElementById("updateResult").innerText = "You cannot update the primary key.";
+        return;
+    }
     //send query to database
     await sendQuery(`UPDATE ${table} SET ${column} = '${value}' WHERE ${pk} = ${id}`, "updateResult");
 }
 
 //async function to insert a record into GenerationRecord
 async function insertGeneration() {
+    const source = getValue("g_source");
+    const year = getValue("g_year");
+    const gwh = getValue("g_gwh");
+
+    if (!isInt(source) || !isValidYear(year) || !isPositiveNumber(gwh)) {
+        document.getElementById("out_gen").innerText = "Invalid input values.";
+        return;
+    }
+
     await sendQuery(`INSERT INTO GenerationRecord (SourceID, Year, Generation_GWh)
-        VALUES (${getValue("g_source")}, ${getValue("g_year")}, ${getValue("g_gwh")})`, "out_gen");
+        VALUES (${source}, ${year}, ${gwh})`, "out_gen");
 }
 
 //async function to insert a record into RegionalGenerationRecord
 async function insertRegional() {
+    const region = getValue("r_region");
+    const source = getValue("r_source");
+    const year = getValue("r_year");
+    const gwh = getValue("r_gwh");
+
+    if (!isInt(region) || !isInt(source) || !isValidYear(year) || !isPositiveNumber(gwh)) {
+        document.getElementById("out_reg").innerText = "Invalid input values.";
+        return;
+    }
+
     await sendQuery(`INSERT INTO RegionalGenerationRecord (RegionID, SourceID, Year, Generation_GWh)
-        VALUES (${getValue("r_region")}, ${getValue("r_source")}, ${getValue("r_year")}, ${getValue("r_gwh")})`, "out_reg");
+        VALUES (${region}, ${source}, ${year}, ${gwh})`, "out_reg");
 }
 
 //async function to insert a record into AnnualEmissionsRecord
 async function insertEmissions() {
+    const year = getValue("e_year");
+    const em = getValue("e_em");
+
+    if (!isValidYear(year) || !isPositiveNumber(em)) {
+        document.getElementById("out_em").innerText = "Invalid input values.";
+        return;
+    }
+
     await sendQuery(`INSERT INTO AnnualEmissionsRecord (Year, EMISSIONS_MtCO2e)
-        VALUES (${getValue("e_year")}, ${getValue("e_em")})`, "out_em");
+        VALUES (${year}, ${em})`, "out_em");
 }
 
 //async function to insert a record into EnergyEmissionsTarget
 async function insertTarget() {
+    const year = getValue("t_year");
+    const pct = getValue("t_pct");
+    const em = getValue("t_em");
+
+    if (!isValidYear(year) || !isPositiveNumber(pct) || pct > 100 || !isPositiveNumber(em)) {
+        document.getElementById("out_tar").innerText = "Invalid input values.";
+        return;
+    }
+
     await sendQuery(`INSERT INTO EnergyEmissionsTarget (TargetYear, RenewableTarget_Pct, EmissionsTarget_MtCO2e)
-        VALUES (${getValue("t_year")}, ${getValue("t_pct")}, ${getValue("t_em")})`, "out_tar");
+        VALUES (${year}, ${pct}, ${em})`, "out_tar");
 }
