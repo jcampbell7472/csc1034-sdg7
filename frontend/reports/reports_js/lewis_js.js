@@ -85,20 +85,21 @@ const buildChart1 = (data) => {
 
 // Report 2
 const loadReport2 = async () => {
-    console.log("loadReport2 triggered");
     const year = document.querySelector("#yearFilter").value;
-    console.log("Selected year:", year);
 
-    const sql = `SELECT TOP 10 r.RegionName, es.SourceName, 
-        ROUND(SUM(rgr.Generation_GWh), 2) AS TotalGeneration_GWh
-        FROM RegionalGenerationRecord rgr
-        INNER JOIN Region r ON rgr.RegionID = r.RegionID
-        INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
-        INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-        WHERE rgr.Year = ${year} AND ec.IsRenewable = 1
-        GROUP BY r.RegionName, es.SourceName
-        HAVING SUM(rgr.Generation_GWh) > 0
-        ORDER BY TotalGeneration_GWh DESC`;
+    const sql = `SELECT 
+    r.RegionName, 
+    es.SourceName, 
+    SUM(rgr.Generation_GWh) AS TotalGeneration_GWh
+    FROM RegionalGenerationRecord rgr
+    INNER JOIN Region r ON rgr.RegionID = r.RegionID
+    INNER JOIN EnergySource es ON rgr.SourceID = es.SourceID
+    INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
+    WHERE rgr.Year = ${year} AND ec.IsRenewable = 1
+    GROUP BY r.RegionName, es.SourceName
+    HAVING SUM(rgr.Generation_GWh) > 0
+    ORDER BY TotalGeneration_GWh DESC
+    LIMIT 10`;
 
     const response = await fetch(API_URL, {
         method: "POST",
@@ -106,6 +107,11 @@ const loadReport2 = async () => {
     });
 
     const result = await response.json();
+    if (!result.data) {
+    console.error("SQL Error:", result.error);
+    return;
+    }
+
     console.log("Report2:", result);
 
     const tbody = document.querySelector("#report2Body");
