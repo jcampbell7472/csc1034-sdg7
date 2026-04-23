@@ -115,10 +115,6 @@ footer {
     border-radius: 4px;
 }
 
-/* =============================================
-   REPORTS PAGE STYLES
-   ============================================= */
-
 /* bordered container for each report */
 .report-section {
     border: 1px solid var(--border);
@@ -292,10 +288,6 @@ canvas { max-width: 100%; }
     background: #c0392b;
 }
 
-/* =============================================
-   DISABLED BUTTON STATE
-   Gives visual feedback when button is loading
-   ============================================= */
 button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
