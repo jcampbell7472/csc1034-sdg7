@@ -5,7 +5,7 @@ const API_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.p
 
 let selectedYear = null;
 
-// ─── showToast ────────────────────────────────────────────────────────────────
+// showToast 
 // Shows a fading toast notification at the bottom right of the screen.
 // type is "success" (green) or "error" (red).
 // Automatically removes itself after 3 seconds of appearing.
@@ -30,7 +30,7 @@ function showToast(message, type = "success") {
     }, 3000);
 }
 
-// ─── setButtonLoading ─────────────────────────────────────────────────────────
+// setButtonLoading 
 // Disables a button and changes the label while a request is running.
 // Prevents double-submission if the user clicks twice quickly.
 // Pass isLoading=false to re-enable the button after the request finishes.
