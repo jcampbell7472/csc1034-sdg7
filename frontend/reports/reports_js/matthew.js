@@ -3,7 +3,7 @@
 // This handles all three SQL-driven reports: fetching data, building tables, and drawing charts
 
 // PHP_URL is the path to dbConnector.php which handles all Database communication
-const PHP_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
+const PHP_URL = "../dbConnector.php";
 
 // UTILITY: sendQuery 
 // Sends a SQL string to dbConnector.php via POST and returns parsed JSON.

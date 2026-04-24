@@ -1,7 +1,7 @@
 // Matthew Rollo (40486932)
 // CRUD for AnnualEmissionsRecord
 
-const PHP_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
+const API_URL = "http://localhost:8000/dbConnector.php";
 
 let selectedYear = null;
 
