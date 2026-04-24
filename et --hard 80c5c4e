@@ -1,0 +1,58 @@
+[33mc2153ba[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD~2
+[33mecc1f94[m HEAD@{1}: reset: moving to HEAD~2
+[33m0412ff2[m HEAD@{2}: reset: moving to HEAD~2
+[33ma4d4ae2[m HEAD@{3}: reset: moving to HEAD~2
+[33m80c5c4e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{4}: reset: moving to HEAD
+[33m80c5c4e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{5}: reset: moving to HEAD
+[33m80c5c4e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{6}: reset: moving to HEAD
+[33m80c5c4e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{7}: reset: moving to HEAD
+[33m80c5c4e[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{8}: commit: fixing eCS
+[33m419d3f5[m HEAD@{9}: commit: fixing
+[33ma4d4ae2[m HEAD@{10}: commit: fixing php connection
+[33m3204ca3[m HEAD@{11}: commit: fixes
+[33m0412ff2[m HEAD@{12}: commit: fixes
+[33ma654930[m HEAD@{13}: commit: fixing spelling
+[33mecc1f94[m HEAD@{14}: commit: fixing issues
+[33ma7c32c2[m HEAD@{15}: commit: fixed id
+[33mc2153ba[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{16}: pull: Fast-forward
+[33m3eb42c6[m HEAD@{17}: pull: Fast-forward
+[33me8dfb84[m HEAD@{18}: pull: Fast-forward
+[33m5a166ec[m HEAD@{19}: pull: Fast-forward
+[33m4783269[m HEAD@{20}: pull: Fast-forward
+[33m11d3185[m HEAD@{21}: pull: Fast-forward
+[33mc26eeed[m HEAD@{22}: pull: Fast-forward
+[33m849e830[m HEAD@{23}: commit: linking page
+[33m3d012e1[m HEAD@{24}: pull: Fast-forward
+[33m62eaf38[m HEAD@{25}: commit: fixing crud
+[33md1b0849[m HEAD@{26}: commit: crud
+[33md549343[m HEAD@{27}: pull: Fast-forward
+[33mac37c76[m HEAD@{28}: pull: Fast-forward
+[33m1b17e27[m HEAD@{29}: pull: Fast-forward
+[33mc8a5bbb[m HEAD@{30}: pull: Fast-forward
+[33m360f14b[m HEAD@{31}: commit: fixed reports
+[33m0e2477d[m HEAD@{32}: commit: fixed reports
+[33m2e880ab[m HEAD@{33}: pull: Fast-forward
+[33md0b75c1[m HEAD@{34}: pull: Fast-forward
+[33m56f7e0e[m HEAD@{35}: pull: Fast-forward
+[33ma5eb44d[m HEAD@{36}: commit (merge): fixing frontend report Matthew
+[33mb071aae[m HEAD@{37}: commit: fixing frontend report Matthew
+[33m8a095a4[m HEAD@{38}: pull: Fast-forward
+[33m09abd25[m HEAD@{39}: pull: Fast-forward
+[33m75164a0[m HEAD@{40}: commit (merge): Matthew frontend html reports
+[33m9d37376[m HEAD@{41}: commit: added frontend report html
+[33m8e081dc[m HEAD@{42}: pull: Fast-forward
+[33m3931873[m HEAD@{43}: pull: Fast-forward
+[33m7226cee[m HEAD@{44}: pull: Fast-forward
+[33m5dd96c9[m HEAD@{45}: pull: Fast-forward
+[33m719be4a[m HEAD@{46}: commit: Added homepage
+[33m0e3aa48[m HEAD@{47}: commit: Added my 3 sql reports
+[33m94fa20a[m HEAD@{48}: pull: Fast-forward
+[33m5a53f44[m HEAD@{49}: reset: moving to HEAD
+[33m5a53f44[m HEAD@{50}: commit: deleted comments on table 7
+[33me396952[m HEAD@{51}: commit: Added bottom 4 insert table data
+[33ma39d735[m HEAD@{52}: commit: Table 7 added
+[33m89e88df[m HEAD@{53}: pull: Fast-forward
+[33mdc99b30[m HEAD@{54}: reset: moving to HEAD
+[33mdc99b30[m HEAD@{55}: commit: added table 7
+[33m6b408bd[m HEAD@{56}: pull: Fast-forward
+[33ma6ebf08[m HEAD@{57}: clone: from https://github.com/jcampbell7472/csc1034-sdg7.git
