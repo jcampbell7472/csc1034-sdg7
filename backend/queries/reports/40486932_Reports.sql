@@ -1,6 +1,27 @@
--- Matthew Rollo 3 SQL Reports
+-- Matthew Rollo (40486932)
+-- 3 SQL Reports
 
 USE energy_monitoring;
+
+-- ============================================================
+-- VIEW: vw_NationalGenerationBySource
+-- Reusable view joining GenerationRecord to EnergySource and
+-- EnergyCategory. Used by Report 1 and Report 3.
+-- ORDER BY and LIMIT are applied in the SELECT statements below
+-- not inside the VIEW — MySQL does not reliably support ORDER BY
+-- inside a view definition.
+-- ============================================================
+CREATE OR REPLACE VIEW vw_NationalGenerationBySource AS
+SELECT
+    gr.Year,
+    es.SourceID,
+    es.SourceName,
+    ec.CategoryName,
+    ec.IsRenewable,
+    gr.Generation_GWh
+FROM GenerationRecord gr
+INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
+INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID;
 
 
 -- Report 1: Top Energy Sources by National Generation (2024)
@@ -11,27 +32,28 @@ USE energy_monitoring;
 -- helping analysts understand which technologies are driving
 -- generation and whether the mix is shifting towards renewables.
 -- Tables used: GenerationRecord, EnergySource, EnergyCategory
+--              (accessed via vw_NationalGenerationBySource)
 
-CREATE VIEW vw_TopSourcesByGeneration AS
 SELECT
-    es.SourceName,
-    ec.CategoryName,
-    ec.IsRenewable,
-    SUM(gr.Generation_GWh) AS TotalGeneration_GWh,
+    SourceName,
+    CategoryName,
+    IsRenewable,
+    SUM(Generation_GWh) AS TotalGeneration_GWh,
     ROUND(
-        SUM(gr.Generation_GWh) * 100.0 /
-        (SELECT SUM(g2.Generation_GWh) FROM GenerationRecord g2 WHERE g2.Year = 2024),
+        SUM(Generation_GWh) * 100.0 /
+        (SELECT SUM(Generation_GWh)
+         FROM vw_NationalGenerationBySource
+         WHERE Year = 2024),
     2) AS ShareOfTotal_Pct
-FROM GenerationRecord gr
-INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
-INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-WHERE gr.Year = 2024
-    AND gr.Generation_GWh > 0
-GROUP BY es.SourceName, ec.CategoryName, ec.IsRenewable
+FROM vw_NationalGenerationBySource
+WHERE Year = 2024
+    AND Generation_GWh > 0
+GROUP BY SourceName, CategoryName, IsRenewable
+-- HAVING filters after grouping — only show sources contributing more than 1%
+-- this differs from WHERE which filters rows before they are grouped
+HAVING ShareOfTotal_Pct > 1
 ORDER BY TotalGeneration_GWh DESC
 LIMIT 10;
-
-SELECT * FROM vw_TopSourcesByGeneration;
 
 
 -- Report 2: Regions With No Recorded Generation for Each Source
@@ -73,21 +95,26 @@ ORDER BY r.RegionName, es.SourceName;
 -- Large positive changes in renewables or large negative
 -- changes in fossil fuels indicate progress towards net zero.
 -- Tables used: GenerationRecord, EnergySource, EnergyCategory
+--              (accessed via vw_NationalGenerationBySource)
 
 SELECT
-    es.SourceName,
-    ec.CategoryName,
+    curr.SourceName,
+    curr.CategoryName,
+    curr.IsRenewable,
     prev.Generation_GWh AS Generation_2023_GWh,
     curr.Generation_GWh AS Generation_2024_GWh,
     ROUND(curr.Generation_GWh - prev.Generation_GWh, 2) AS Change_GWh,
+    -- NULLIF prevents division by zero if 2023 generation was 0
     ROUND(
         (curr.Generation_GWh - prev.Generation_GWh) * 100.0 / NULLIF(prev.Generation_GWh, 0),
     2) AS PercentChange
-FROM GenerationRecord curr
-INNER JOIN GenerationRecord prev
+FROM vw_NationalGenerationBySource curr
+-- self-join: join the view to itself to get 2023 and 2024 in the same row
+INNER JOIN vw_NationalGenerationBySource prev
     ON curr.SourceID = prev.SourceID
     AND curr.Year = 2024
     AND prev.Year = 2023
-INNER JOIN EnergySource es ON curr.SourceID = es.SourceID
-INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
+-- HAVING filters after the join — only show sources with a meaningful change
+-- removes noise from sources that barely moved between years
+HAVING ABS(Change_GWh) > 0.5
 ORDER BY Change_GWh DESC;
