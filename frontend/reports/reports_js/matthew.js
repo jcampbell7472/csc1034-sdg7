@@ -1,9 +1,12 @@
-// Matthew Rollo (40484527)
+// Matthew Rollo (40486932)
 // matthew.js — JS for the individual reports page
+// Handles all three SQL-driven reports: fetching data, building tables, and drawing charts
 
-const PHP_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
+// PHP_URL is the path to dbConnector.php which handles all DB communication
+// Adjust this path if your reports page is at a different folder depth
+const PHP_URL = "../dbConnector.php";
 
-// ─── UTILITY: sendQuery ───────────────────────────────────────────────────────
+// UTILITY: sendQuery 
 // Sends a SQL string to dbConnector.php via POST and returns parsed JSON.
 // Throws a descriptive error if the network request fails or the response
 // is not valid JSON — prevents silent crashes.
@@ -32,7 +35,7 @@ async function sendQuery(query) {
     return json;
 }
 
-// ─── UTILITY: buildTable ──────────────────────────────────────────────────────
+// UTILITY: buildTable 
 // Takes an array of row objects returned from the DB and builds an HTML table.
 // Column headers are taken from the keys of the first row object.
 function buildTable(data, containerId) {
@@ -69,7 +72,7 @@ function buildTable(data, containerId) {
     container.innerHTML = html;
 }
 
-// ─── UTILITY: showToast ───────────────────────────────────────────────────────
+// UTILITY: showToast 
 // Shows a small toast notification at the bottom of the screen.
 // type is "success" or "error" — controls the colour.
 // Automatically fades out after 3 seconds.
@@ -94,7 +97,7 @@ function showToast(message, type = "success") {
     }, 3000);
 }
 
-// ─── UTILITY: setButtonLoading ────────────────────────────────────────────────
+// UTILITY: setButtonLoading 
 // Disables a button and changes its text while a report is loading.
 // This prevents double-submission if the user clicks the button twice.
 // Call setButtonLoading(btn, false) to re-enable after the report finishes.
@@ -109,7 +112,7 @@ function setButtonLoading(btn, isLoading) {
     }
 }
 
-// ─── REPORT 1 ─────────────────────────────────────────────────────────────────
+// REPORT 1 
 // Top Energy Sources by National Generation
 // Shows the top 10 sources for a selected year with a bar chart.
 
@@ -127,27 +130,26 @@ async function runReport1() {
 
     // the year value from the dropdown is inserted into the WHERE clause —
     // this is what makes the report parameterised
-    const query = `SELECT
-    es.SourceName,
-    ec.CategoryName,
-    ec.IsRenewable,
-    SUM(gr.Generation_GWh) AS TotalGeneration_GWh,
-    ROUND(
-        SUM(gr.Generation_GWh) * 100.0 /
-        (
-            SELECT SUM(g2.Generation_GWh)
-            FROM GenerationRecord g2
-            WHERE g2.Year = ${year}
-        )
-    , 2) AS ShareOfTotal_Pct
-FROM GenerationRecord gr
-INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
-INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
-WHERE gr.Year = ${year}
-  AND gr.Generation_GWh > 0
-GROUP BY es.SourceName, ec.CategoryName, ec.IsRenewable
-ORDER BY TotalGeneration_GWh DESC
-LIMIT 10;`;
+    const query = `
+        SELECT
+            es.SourceName,
+            ec.CategoryName,
+            ec.IsRenewable,
+            SUM(gr.Generation_GWh) AS TotalGeneration_GWh,
+            ROUND(
+                SUM(gr.Generation_GWh) * 100.0 /
+                (SELECT SUM(g2.Generation_GWh) FROM GenerationRecord g2 WHERE g2.Year = ${year}),
+            2) AS ShareOfTotal_Pct
+        FROM GenerationRecord gr
+        INNER JOIN EnergySource es ON gr.SourceID = es.SourceID
+        INNER JOIN EnergyCategory ec ON es.CategoryID = ec.CategoryID
+        WHERE gr.Year = ${year}
+            AND gr.Generation_GWh > 0
+        GROUP BY es.SourceName, ec.CategoryName, ec.IsRenewable
+        HAVING ShareOfTotal_Pct > 0
+        ORDER BY TotalGeneration_GWh DESC
+        LIMIT 10
+    `;
 
     try {
         const result = await sendQuery(query);
@@ -215,7 +217,7 @@ LIMIT 10;`;
     setButtonLoading(btn, false);
 }
 
-// ─── REPORT 2 ─────────────────────────────────────────────────────────────────
+// REPORT 2
 // Regional Generation Coverage Gaps
 // Uses a LEFT JOIN to find region/source combinations with no recorded data.
 
@@ -229,7 +231,8 @@ async function runReport2() {
 
     // LEFT JOIN returns all expected region/source pairs; WHERE filters to only
     // those with no matching record — these are the coverage gaps
-    const query = `SELECT
+    const query = `
+        SELECT
             r.RegionName,
             es.SourceName,
             ec.CategoryName,
@@ -271,7 +274,7 @@ async function runReport2() {
     setButtonLoading(btn, false);
 }
 
-// ─── REPORT 3 ─────────────────────────────────────────────────────────────────
+// REPORT 3
 // Year-on-Year Generation Change by Source
 // Self-joins GenerationRecord twice to compare two selected years in one row.
 
@@ -293,7 +296,8 @@ async function runReport3() {
 
     // GenerationRecord is aliased as curr (toYear) and prev (fromYear) so both
     // years appear as columns in the same result row
-    const query = `SELECT
+    const query = `
+        SELECT
             es.SourceName,
             ec.CategoryName,
             ec.IsRenewable,
