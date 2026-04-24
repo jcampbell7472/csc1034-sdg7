@@ -3,7 +3,7 @@
 // This handles all three SQL-driven reports: fetching data, building tables, and drawing charts
 
 // PHP_URL is the path to dbConnector.php which handles all Database communication
-const PHP_URL = "../../dbConnector.php";
+const PHP_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
 
 // UTILITY: sendQuery 
 // Sends a SQL string to dbConnector.php via POST and returns parsed JSON.
@@ -30,7 +30,7 @@ async function sendQuery(query) {
         // server responded but not with valid JSON — often means PHP crashed
         throw new Error("Server returned an invalid response. Check PHP error logs.");
     }
-
+    console.log(json);
     return json;
 }
 
@@ -129,8 +129,7 @@ async function runReport1() {
 
     // the year value from the dropdown is inserted into the WHERE clause —
     // this is what makes the report parameterised
-    const query = `
-        SELECT
+    const query = `SELECT
             es.SourceName,
             ec.CategoryName,
             ec.IsRenewable,
@@ -230,8 +229,7 @@ async function runReport2() {
 
     // LEFT JOIN returns all expected region/source pairs; WHERE filters to only
     // those with no matching record — these are the coverage gaps
-    const query = `
-        SELECT
+    const query = `SELECT
             r.RegionName,
             es.SourceName,
             ec.CategoryName,
@@ -295,8 +293,7 @@ async function runReport3() {
 
     // GenerationRecord is aliased as curr (toYear) and prev (fromYear) so both
     // of the years appear as columns in the same result row
-    const query = `
-        SELECT
+    const query = `SELECT
             es.SourceName,
             ec.CategoryName,
             ec.IsRenewable,
