@@ -3,7 +3,7 @@
 // This handles all three SQL-driven reports: fetching data, building tables, and drawing charts
 
 // PHP_URL is the path to dbConnector.php which handles all Database communication
-const PHP_URL = "../dbConnector.php";
+const PHP_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
 
 // UTILITY: sendQuery 
 // Sends a SQL string to dbConnector.php via POST and returns parsed JSON.
@@ -54,7 +54,7 @@ function buildTable(data, containerId) {
     data.forEach(row => {
         html += "<tr>";
         headers.forEach(h => {
-            // IsRenewable is stored as 1/0 in the DB — convert to a coloured badge
+            // IsRenewable is stored as 1/0 in the database 
             if (h === "IsRenewable") {
                 const label = row[h] == 1 ? "Yes" : "No";
                 const cls   = row[h] == 1 ? "badge-yes" : "badge-no";
@@ -72,11 +72,11 @@ function buildTable(data, containerId) {
 }
 
 // UTILITY: showToast 
-// Shows a small toast notification at the bottom of the screen.
+// Shows a small toast notification at the bottom right of the screen.
 // type is "success" or "error" — controls the colour.
 // Automatically fades out after 3 seconds.
 function showToast(message, type = "success") {
-    // remove any existing toast before showing a new one
+    // removes any existing toast before showing a new one
     const existing = document.getElementById("toast");
     if (existing) existing.remove();
 
@@ -154,7 +154,7 @@ async function runReport1() {
         const result = await sendQuery(query);
 
         if (!result.success) {
-            // DB returned an error — show it in the message and as a toast
+            // Database returned an error — show it in the message and as a toast
             msg.textContent = "Query error: " + result.error;
             showToast("Query failed: " + result.error, "error");
             setButtonLoading(btn, false);
@@ -294,7 +294,7 @@ async function runReport3() {
     msg.textContent = "Loading…";
 
     // GenerationRecord is aliased as curr (toYear) and prev (fromYear) so both
-    // years appear as columns in the same result row
+    // of the years appear as columns in the same result row
     const query = `
         SELECT
             es.SourceName,
