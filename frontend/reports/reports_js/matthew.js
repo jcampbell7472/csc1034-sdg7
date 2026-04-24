@@ -1,9 +1,8 @@
 // Matthew Rollo (40486932)
 // matthew.js — JS for the individual reports page
-// Handles all three SQL-driven reports: fetching data, building tables, and drawing charts
+// This handles all three SQL-driven reports: fetching data, building tables, and drawing charts
 
-// PHP_URL is the path to dbConnector.php which handles all DB communication
-// Adjust this path if your reports page is at a different folder depth
+// PHP_URL is the path to dbConnector.php which handles all Database communication
 const PHP_URL = "../dbConnector.php";
 
 // UTILITY: sendQuery 

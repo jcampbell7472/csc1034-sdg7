@@ -1,14 +1,48 @@
-// simple CRUD for AnnualEmissionsRecord
+// Matthew Rollo (40486932)
+// CRUD for AnnualEmissionsRecord
 
 const API_URL = "https://jcampbell2052.webhosting1.eeecs.qub.ac.uk/dbConnector.php";
 
 let selectedYear = null;
 
-// helper to show messages
-function showMessage(text, type) {
-    const output = document.getElementById("output");
-    output.innerText = text;
-    output.className = type;
+// ─── showToast ────────────────────────────────────────────────────────────────
+// Shows a fading toast notification at the bottom right of the screen.
+// type is "success" (green) or "error" (red).
+// Automatically removes itself after 3 seconds of appearing.
+function showToast(message, type = "success") {
+    // remove any existing toast before showing a new one
+    const existing = document.getElementById("toast");
+    if (existing) existing.remove();
+
+    const toast = document.createElement("div");
+    toast.id = "toast";
+    toast.className = "toast toast-" + type;
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    // small delay before adding toast-visible triggers the CSS fade-in transition
+    setTimeout(() => toast.classList.add("toast-visible"), 10);
+
+    // remove the toast after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove("toast-visible");
+        setTimeout(() => toast.remove(), 400); // wait for fade-out to finish
+    }, 3000);
+}
+
+// ─── setButtonLoading ─────────────────────────────────────────────────────────
+// Disables a button and changes the label while a request is running.
+// Prevents double-submission if the user clicks twice quickly.
+// Pass isLoading=false to re-enable the button after the request finishes.
+function setButtonLoading(btn, isLoading) {
+    if (isLoading) {
+        btn.disabled = true;
+        btn.dataset.originalText = btn.textContent; // save original label
+        btn.textContent = "Loading…";
+    } else {
+        btn.disabled = false;
+        btn.textContent = btn.dataset.originalText || "Submit";
+    }
 }
 
 // fetch and display records
@@ -43,7 +77,8 @@ fetchRecords();
 
 // delete
 async function deleteRecord(year) {
-    if (!confirm("Delete this record?")) return;
+    // confirmation required before any destructive action
+    if (!confirm(`Are you sure you want to delete the record for ${year}? This cannot be undone.`)) return;
 
     const sql = `DELETE FROM AnnualEmissionsRecord WHERE Year = ${year}`;
 
@@ -55,10 +90,10 @@ async function deleteRecord(year) {
     const result = await response.json();
 
     if (result.success) {
-        showMessage("Record deleted.", "success");
+        showToast(`Record for ${year} deleted successfully.`, "success");
         fetchRecords();
     } else {
-        showMessage("Delete failed.", "error");
+        showToast("Delete failed: " + (result.error || "unknown error"), "error");
     }
 }
 
@@ -88,21 +123,25 @@ function resetForm() {
 async function submitForm() {
     const year = document.getElementById("year").value.trim();
     const emissions = document.getElementById("emissions").value.trim();
+    const btn = document.getElementById("submitBtn");
 
     if (!year || !emissions) {
-        showMessage("All fields required.", "error");
+        showToast("All fields are required.", "error");
         return;
     }
 
     if (year < 2000 || year > 2100) {
-        showMessage("Invalid year.", "error");
+        showToast("Year must be between 2000 and 2100.", "error");
         return;
     }
 
     if (emissions < 0) {
-        showMessage("Emissions cannot be negative.", "error");
+        showToast("Emissions cannot be negative.", "error");
         return;
     }
+
+    // disable the button while the request runs to prevent double-submission
+    setButtonLoading(btn, true);
 
     let sql;
 
@@ -123,10 +162,13 @@ async function submitForm() {
     const result = await response.json();
 
     if (result.success) {
-        showMessage(selectedYear ? "Updated successfully." : "Added successfully.", "success");
+        showToast(selectedYear ? "Record updated successfully." : "Record added successfully.", "success");
         resetForm();
         fetchRecords();
     } else {
-        showMessage("Operation failed.", "error");
+        showToast("Operation failed: " + (result.error || "unknown error"), "error");
     }
+
+    // re-enable button after success or failure
+    setButtonLoading(btn, false);
 }

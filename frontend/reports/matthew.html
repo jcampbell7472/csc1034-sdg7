@@ -1,3 +1,5 @@
+<!-- Matthew Rollo-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +9,6 @@
     <link rel="stylesheet" href="../css/style.css">
     <!-- Chart.js is imported from a CDN to draw charts on HTML canvas elements -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="reports_js/matthew.js"></script>
 </head>
 <body>
 
@@ -51,7 +52,7 @@
         <button id="r1_btn" onclick="runReport1()">Run Report</button>
     </div>
 
-    <!-- result-msg shows row count or error after report runs -->
+    <!-- result message shows row count or error after report runs -->
     <p class="result-msg" id="r1_msg"></p>
     <div id="r1_table"></div>
 
@@ -123,6 +124,8 @@
     UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ &amp; UK Government Statistics
 </footer>
 
+<!-- Js is in the separate file to keep HTML and logic separate from one another -->
+<script src="matthew.js"></script>
 
 </body>
 </html>

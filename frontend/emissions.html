@@ -1,4 +1,4 @@
-<!--Matthew Rollo-->
+<!-- Matthew Rollo (40486932) -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -6,48 +6,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Annual Emissions — UK Energy Monitor</title>
+    <!-- shared CSS stylesheet used across all pages of the website for consistent layout and theme -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
+<!-- NAV -->
 <nav>
     <a class="nav-title" href="index.html">UK Energy Monitor</a>
     <ul class="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="dashboard.html">Dashboard</a></li>
         <li><a href="reports.html">Reports</a></li>
+        <!-- class="active" highlights the current page in the nav -->
         <li><a href="data_entry.html" class="active">Data Entry</a></li>
         <li><a href="about.html">About</a></li>
     </ul>
 </nav>
 
+<!-- PAGE HEADER -->
 <header class="page-header">
     <h1>Annual Emissions Records</h1>
     <p>Manage yearly UK carbon emissions data.</p>
 </header>
 
+<!-- TWO COLUMN LAYOUT — form on the left, quick links on the right -->
 <div class="bottom">
-    <div class="cards">
 
+    <!-- LEFT COLUMN: add/edit form -->
+    <div class="cards">
         <div class="card entry-section">
+
+            <!-- formTitle updates to "Edit Record" when the user clicks Edit on a row -->
             <h2 id="formTitle">Add Record</h2>
 
+            <!-- output paragraph shows validation errors and success messages -->
             <p id="output" class="result-msg"></p>
 
             <label for="year">Year</label>
+            <!-- type="number" prevents non-numeric input at the browser level -->
             <input type="number" id="year" placeholder="e.g. 2024">
 
             <label for="emissions">Emissions (MtCO2e)</label>
             <input type="number" id="emissions" placeholder="e.g. 371">
 
             <div class="param-row" style="margin-top: 12px;">
+                <!-- id="submitBtn" lets JS find and disable this button during submission
+                     to prevent the user from clicking twice and inserting duplicate records -->
                 <button id="submitBtn" onclick="submitForm()">Add Record</button>
+                <!-- cancel button resets the form back to add mode without submitting -->
                 <button onclick="resetForm()">Cancel</button>
             </div>
-        </div>
 
+        </div>
     </div>
 
+    <!-- RIGHT COLUMN: quick links to the other CRUD pages -->
     <div class="cards">
         <div class="card">
             <h3>Quick Links</h3>
@@ -56,8 +70,10 @@
             <a href="targets.html" class="button">Energy Targets</a>
         </div>
     </div>
+
 </div>
 
+<!-- RECORDS TABLE -->
 <h2 style="margin-top: 32px;">Records</h2>
 <table>
     <thead>
@@ -70,10 +86,12 @@
     <tbody id="recordsBody"></tbody>
 </table>
 
+<!-- FOOTER -->
 <footer>
     UK Energy Monitor — CSC1034 Group Project | Data sourced from DESNZ &amp; UK Government Statistics
 </footer>
 
+<!-- JS is in a separate file to keep HTML structure and logic separate from each other -->
 <script src="js/emissions.js"></script>
 
 </body>
